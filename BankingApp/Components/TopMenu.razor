@@ -1,0 +1,28 @@
+﻿@inject IUserInteraction userInteraction
+@inject IUIService UIService
+
+
+@if (userInteraction.isAuthenticated)
+{
+    <p>@userInteraction.Username - <a href="" @onclick="OnLogout">Logout</a></p>
+}
+else
+{
+    <p>Banking App 4000</p>
+}
+
+@code {
+    protected override void OnInitialized()
+    {
+        UIService.OnUpdateUI += StateHasChanged;
+    }
+
+    void OnLogout()
+    {
+        userInteraction.isAuthenticated = false;
+        UIService.UpdateUI();       
+    }
+
+
+
+}

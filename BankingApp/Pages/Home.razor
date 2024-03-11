@@ -1,0 +1,80 @@
+﻿@page "/"
+@inject IUserInteraction userInteraction
+@inject IUIService UIService
+@inject IDataService dataService
+@inject IObserver observer
+
+<PageTitle>Banking</PageTitle>
+
+@if (!userInteraction.isAuthenticated)
+{
+    <h1>Welcome to Your Bank!</h1>
+}
+else
+{
+    <h1>Welcome @userInteraction.Username to your Bank!</h1>
+}
+
+
+<p>This app has been designed and created by Philip Mullins as a demonstration of all 5 SOLID principles.</p>
+<p>This is not intended to be a mock of a real world bank app because the features here are basic and its about</p>
+<p>the bankend configuration and organization of the app itself which is more important.</p>
+<br />
+<p>This app is specifically designed to showcase my programming skills and understanding of the various approaches.</p>
+<p>I am a dedicated self learner and not claiming to know it all. I am always looking to improve and hone my craft.</p>
+<p>Thanks for checking this out!</p>
+
+<ul>
+    <li>Single Responsibility - Usually the R word is enough to make most turn and run, but not this developer. We want to make sure that each class only has 1 responsibility to the best of our ability.</li>
+    <li>Open/Closed - Classes, modules, functions etc are open for extention, closed for modifications</li>
+    <li>Liskov Substition - Many classes but 1 class to rule them all! One class can be replaced by other subclasses wihtout affecting the correctness of the program.</li>
+    <li>Interface Substitution - Define interfaces that are specific to the needs of hte client and should not depend on methods they do not use.</li>
+    <li>Dependency Inversion - High level modules should not depend on low-level modules but on abstractions instead.</li>
+</ul>
+
+<p>As you read through these, you may see that there is some overlap, and indeed there is. If you consequently apply Open/Closed and Liskov, this will also naturally invoke the Dependency Inversion principal as well.
+    The point here is that we need to be, as software developers, aware of all approaches and patterns available to be able to build scaleable programs.
+</p>
+
+@if (!userInteraction.isAuthenticated)
+{
+    <LoginForm onLogin="UpdateUI"></LoginForm>
+}
+
+
+<button @onclick=(SeedDataFromGUI)>Seed Data</button>
+
+@code {
+
+    protected override void OnInitialized()
+    {
+        state.Message = "GUI: Web App Has Successfully Initialized.";
+        observer.Notify(state);
+        UIService.OnUpdateUI += StateHasChanged;
+    }
+
+    private void UpdateUI()
+    {
+        UIService.UpdateUI();
+    }
+
+
+    StateChangeDTO state = new StateChangeDTO();
+
+
+    private void SeedDataFromGUI()
+    {
+        if (dataService.SeedData())
+        {
+            state.Message = "GUI: Seed Data Returned Successful.";
+            observer.Notify(state);
+        }
+        else
+        {
+            state.Message = "Seed Data Returned Unsuccessful.";
+            observer.Notify(state);
+        }
+    }
+
+ 
+}
