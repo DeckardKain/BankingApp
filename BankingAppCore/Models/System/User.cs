@@ -1,8 +1,9 @@
-﻿namespace BankingApp.Models.System
+﻿namespace BankingAppCore.Models.System
 {
     public class User
     {
-        public int Id { get; set; }
+        public string Id { get; set; }
+        public string? CustomerId { get; set; }
         public string Username { get; set; }
         public string Password { get; set; }
         public bool IsAuthenticated { get; set; }

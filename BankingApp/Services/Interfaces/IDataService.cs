@@ -1,6 +1,6 @@
-﻿using BankingApp.Models.Accounts;
-using BankingApp.Models.Customers;
-using BankingApp.Models.Transactions;
+﻿using BankingAppCore.Models.Accounts;
+using BankingAppCore.Models.Customers;
+using BankingAppCore.Models.Transactions;
 
 namespace BankingApp.Services.Interfaces
 {

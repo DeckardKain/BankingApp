@@ -1,0 +1,40 @@
+﻿@page "/admin"
+
+@*This Page is to demonstrate where we can track the entire user to app interactions*@
+@*We could easily add more functionality such as source IP, country, last login etc.*@
+
+<h3>Admin</h3>
+
+@if (AppManager.LoggedInUsers != null && AppManager.LoggedInUsers.Any())
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Username</th>
+                <th>Password</th>
+                <th>Is Authenticated</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var user in AppManager.LoggedInUsers)
+            {
+                <tr>
+                    <td>@user.Username</td>
+                    <td>@user.Password</td>
+                    <td>@user.IsAuthenticated</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>No logged-in users.</p>
+}
+
+
+
+
+@code {
+
+}

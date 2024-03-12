@@ -1,10 +1,10 @@
 ﻿using BankingApp.Data;
-using BankingApp.Models.Accounts;
-using BankingApp.Models.Customers;
-using BankingApp.Models.System;
-using BankingApp.Models.Transactions;
 using BankingApp.Services.Interfaces;
 using Microsoft.IdentityModel.Tokens;
+using BankingAppCore.Models.Customers;
+using BankingAppCore.Models.Accounts;
+using BankingAppCore.Models.Transactions;
+
 
 namespace BankingApp.Services
 {

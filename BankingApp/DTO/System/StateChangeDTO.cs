@@ -1,4 +1,4 @@
-﻿namespace BankingApp.Models.System
+﻿namespace BankingApp.DTO.System
 {
     // Single Responsibility - Immutable object to shuttle data between UI and Lower Layers.
     public record StateChangeDTO

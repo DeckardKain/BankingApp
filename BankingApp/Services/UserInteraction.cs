@@ -1,7 +1,8 @@
-﻿using BankingApp.Managers;
-using BankingApp.Models.System;
-using BankingApp.Models.UI;
+﻿using BankingApp.DTO.System;
+using BankingApp.DTO.UI;
+using BankingApp.Managers;
 using BankingApp.Services.Interfaces;
+using BankingAppCore.Models.System;
 
 namespace BankingApp.Services
 {

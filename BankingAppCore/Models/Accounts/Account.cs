@@ -1,13 +1,13 @@
-﻿using BankingApp.Models.Transactions;
+﻿using BankingAppCore.Models.Transactions;
 
-namespace BankingApp.Models.Accounts
+namespace BankingAppCore.Models.Accounts
 {
     // Single Responsibility - Represents only a financial account.
     // Open/Closed - We can create subclasses to extend functionality.
     public abstract class Account
     {
-        public int id { get; set; }
-        public int customerId { get; set; }
+        public string id { get; set; }
+        public string customerId { get; set; }
         public string accountId { get; set; }        
         public AccountType accountType { get; set; }
         public List<Transaction>? transactions { get; set; }

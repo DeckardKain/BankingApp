@@ -1,5 +1,4 @@
-﻿using BankingApp.Models.System;
-using BankingApp.Models.UI;
+﻿using BankingApp.DTO.System;
 using BankingApp.Services.Interfaces;
 
 

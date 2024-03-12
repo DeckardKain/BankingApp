@@ -1,4 +1,5 @@
 ﻿@page "/"
+
 @inject IUserInteraction userInteraction
 @inject IUIService UIService
 @inject IDataService dataService
@@ -17,8 +18,8 @@ else
 
 
 <p>This app has been designed and created by Philip Mullins as a demonstration of all 5 SOLID principles.</p>
-<p>This is not intended to be a mock of a real world bank app because the features here are basic and its about</p>
-<p>the bankend configuration and organization of the app itself which is more important.</p>
+<p>This is not intended to be a mock of a real world bank app because the features here are basic and its about
+    the bankend configuration and organization of the app itself which is more important.</p>
 <br />
 <p>This app is specifically designed to showcase my programming skills and understanding of the various approaches.</p>
 <p>I am a dedicated self learner and not claiming to know it all. I am always looking to improve and hone my craft.</p>
@@ -46,6 +47,8 @@ else
 
 @code {
 
+    StateChangeDTO state = new StateChangeDTO();
+
     protected override void OnInitialized()
     {
         state.Message = "GUI: Web App Has Successfully Initialized.";
@@ -53,14 +56,11 @@ else
         UIService.OnUpdateUI += StateHasChanged;
     }
 
+    // Method that is called from child component, as a demonstration of that type of communication.
     private void UpdateUI()
     {
         UIService.UpdateUI();
     }
-
-
-    StateChangeDTO state = new StateChangeDTO();
-
 
     private void SeedDataFromGUI()
     {

@@ -1,5 +1,5 @@
-﻿using BankingApp.Models.System;
-using BankingApp.Models.UI;
+﻿using BankingApp.DTO.UI;
+using BankingAppCore.Models.System;
 
 namespace BankingApp.Managers
 {
@@ -29,7 +29,7 @@ namespace BankingApp.Managers
         
         public delegate void OnUserLogin(UserLoginDTO userLoginDTO);
                         
-        static List<User> LoggedInUsers = new List<User>();        
+        public static List<User> LoggedInUsers = new List<User>();        
 
         public static void AddNewUserLogin(UserLoginDTO userLogin)
         {

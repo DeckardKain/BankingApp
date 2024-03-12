@@ -1,4 +1,4 @@
-﻿using BankingApp.Models.System;
+﻿using BankingApp.DTO.System;
 
 namespace BankingApp.Services.Interfaces
 {

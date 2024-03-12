@@ -1,4 +1,4 @@
-﻿namespace BankingApp.Models.Transactions
+﻿namespace BankingAppCore.Models.Transactions
 {
 
     // Single Responsilibility - Represents a financial transaction only.
