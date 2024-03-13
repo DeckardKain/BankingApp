@@ -1,14 +1,15 @@
-﻿using BankingApp.Data;
+﻿using BankingAppBackEnd.Data;
+using BankingAppBackEnd.Services.Interfaces;
 
-namespace BankingAppBackEnd.Data
+namespace BankingAppBackEnd.Services
 {
-    public class DataService<T> where T : class
+    public class DataService<T> : IDataService<T> where T : class
     {
         private readonly Repository<T> _repository;
 
         public DataService(BankingAppDbContext dbContext)
         {
-            _repository = new Repository<T>(dbContext);            
+            _repository = new Repository<T>(dbContext);
         }
 
         public bool Create(T entity)
@@ -16,7 +17,7 @@ namespace BankingAppBackEnd.Data
             if (_repository.Save(entity))
             {
                 return true;
-            }           
+            }
             return false;
         }
 

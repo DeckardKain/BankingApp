@@ -1,5 +1,4 @@
 using BankingApp;
-using BankingApp.Data;
 using BankingApp.Managers;
 using BankingApp.Services;
 using BankingApp.Services.Interfaces;
@@ -15,7 +14,6 @@ builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.
 builder.Services.AddLogging();
 
 builder.Services.AddSingleton<AppManager>();
-builder.Services.AddDbContext<BankingAppDbContext>();
 builder.Services.AddScoped<IObserver, Observer>();
 builder.Services.AddScoped<IDataService, DataService>();
 builder.Services.AddScoped<IUIService, UIService>();

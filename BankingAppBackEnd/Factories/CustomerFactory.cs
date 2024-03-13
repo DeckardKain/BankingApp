@@ -1,16 +1,16 @@
-﻿using BankingAppBackEnd.Data;
-using BankingAppCore.Models.Customers;
+﻿using BankingAppCore.Models.Customers;
 using BankingApp.DTO.UI;
 using BankingAppBackEnd.Utilities;
-using BankingAppCore.Models.System; // cheating here a little :)
+using BankingAppCore.Models.System;
+using BankingAppBackEnd.Services.Interfaces;
 
 namespace BankingAppBackEnd.Factories
 {
     public class CustomerFactory
     {
-        private readonly DataService<Customer> _dataService;
+        private readonly IDataService<Customer> _dataService;
 
-        public CustomerFactory(DataService<Customer> dataService)
+        public CustomerFactory(IDataService<Customer> dataService)
         {
             _dataService = dataService;
         }

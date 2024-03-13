@@ -40,10 +40,13 @@ else
 @if (!userInteraction.isAuthenticated)
 {
     <LoginForm onLogin="UpdateUI"></LoginForm>
+    <RegistrationForm />
+}
+else
+{
+    
 }
 
-
-<button @onclick=(SeedDataFromGUI)>Seed Data</button>
 
 @code {
 
@@ -62,19 +65,7 @@ else
         UIService.UpdateUI();
     }
 
-    private void SeedDataFromGUI()
-    {
-        if (dataService.SeedData())
-        {
-            state.Message = "GUI: Seed Data Returned Successful.";
-            observer.Notify(state);
-        }
-        else
-        {
-            state.Message = "Seed Data Returned Unsuccessful.";
-            observer.Notify(state);
-        }
-    }
+
 
  
 }

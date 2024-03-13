@@ -1,5 +1,4 @@
-﻿using BankingApp.Data;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 
 
 namespace BankingAppBackEnd.Data
@@ -32,19 +31,45 @@ namespace BankingAppBackEnd.Data
 
         public void Update(T entity)
         {
-            _dbSet.Update(entity);
-            _dbContext.SaveChanges();
+            try
+            {
+                _dbSet.Update(entity);
+                _dbContext.SaveChanges();
+            }
+            catch(Exception ex)
+            {
+
+            }
+
         }
 
         public void Delete(T entity) 
         {
-            _dbSet.Remove(entity);
-            _dbContext.SaveChanges();
+            try
+            {
+                _dbSet.Remove(entity);
+                _dbContext.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+
+            }
+
         }
 
-        public T GetById(int id)
+        public T? GetById(int id)
         {
-            return _dbSet.Find(id);
+            try
+            {
+                return _dbSet.Find(id);
+            }
+            catch (Exception ex)
+            {
+
+            }
+
+            return null;
+            
         }
 
 

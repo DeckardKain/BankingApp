@@ -12,18 +12,18 @@ namespace BankingAppBackEnd.Controllers
         private readonly HttpClient _httpClient;
         private readonly CustomerFactory _customerFactory;
 
-        public HomeController(HttpClient httpClient, CustomerFactory customerFactory)
+        public HomeController(IHttpClientFactory httpClientFactory, CustomerFactory customerFactory)
         {
-            _httpClient = httpClient;
+            _httpClient = httpClientFactory.CreateClient("BankingAppFrontEnd");
             _customerFactory = customerFactory;
         }
 
         [HttpPost("registernewcustomer")]
-        public IActionResult HandleNewUserPostRequest([FromBody] JsonElement data)
+        public IActionResult HandleNewUserPostRequest([FromBody] UserRegisterDTO data)
         {
             try
             {                
-                var userDTO = JsonSerializer.Deserialize<UserRegisterDTO>(data.GetRawText());
+                var userDTO = data;
                 if (userDTO == null)
                 {
                     return BadRequest("Invalid JSON payload.");

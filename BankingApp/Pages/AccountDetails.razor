@@ -39,10 +39,6 @@
 
     protected override void OnInitialized()
     {
-        if(AccountId != null)
-        {
-            Transactions = DataService.GetAllTransactionsByAccountId(AccountId);
-        }
         
     }
 
