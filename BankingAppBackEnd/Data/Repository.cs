@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using BankingAppCore.Models.Customers;
+using Microsoft.EntityFrameworkCore;
 
 
 namespace BankingAppBackEnd.Data
@@ -24,9 +25,9 @@ namespace BankingAppBackEnd.Data
             }
             catch(Exception ex)
             {
-                return false;
+                Console.WriteLine($"An error occurred while adding {typeof(T).Name}: {ex.Message}");
+                throw;
             }
-
         }
 
         public void Update(T entity)
@@ -38,7 +39,8 @@ namespace BankingAppBackEnd.Data
             }
             catch(Exception ex)
             {
-
+                Console.WriteLine($"An error occurred while Updating {typeof(T).Name}: {ex.Message}");
+                throw;
             }
 
         }
@@ -52,7 +54,8 @@ namespace BankingAppBackEnd.Data
             }
             catch (Exception ex)
             {
-
+                Console.WriteLine($"An error occurred while deleting {typeof(T).Name}: {ex.Message}");
+                throw;
             }
 
         }
@@ -65,13 +68,29 @@ namespace BankingAppBackEnd.Data
             }
             catch (Exception ex)
             {
-
-            }
-
-            return null;
-            
+                Console.WriteLine($"An error occurred while fetching {typeof(T).Name} by Id : {ex.Message}");
+                throw;
+            }            
         }
 
+        public IEnumerable<T> GetAll()
+        {
+            try
+            {
+                if(typeof(T) == typeof(Customer))
+                {
+                    return _dbSet.Include("CustomerData").ToList();
+                }
+                
+                return _dbSet.ToList();
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred while fetching all {typeof(T).Name} records: {ex.Message}");
+                throw;
+            }
+        }
 
     }
 }

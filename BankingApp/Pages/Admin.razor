@@ -1,9 +1,48 @@
 ﻿@page "/admin"
+@inject IDataService dataService
 
 @*This Page is to demonstrate where we can track the entire user to app interactions*@
 @*We could easily add more functionality such as source IP, country, last login etc.*@
 
 <h3>Admin</h3>
+
+<h4>All Customers</h4>
+
+@if (Customers == null || !Customers.Any())
+{
+    <p>No customers found.</p>
+}
+else
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Customer ID</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Phone Number</th>
+                <th>Address</th>
+                <th>Customer Type</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var customer in Customers)
+            {
+                <tr>
+                    <td>@customer.Id</td>
+                    <td>@customer.CustomerData?.Name</td>
+                    <td>@customer.CustomerData?.Email</td>
+                    <td>@customer.CustomerData?.PhoneNumber</td>
+                    <td>@customer.CustomerData?.Address</td>
+                    <td>@customer.CustomerType</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+
+<h4>Currently Logged in Users</h4>
 
 @if (AppManager.LoggedInUsers != null && AppManager.LoggedInUsers.Any())
 {
@@ -36,5 +75,10 @@ else
 
 
 @code {
+    private List<Customer> Customers = new List<Customer>();
 
+    protected override async Task OnInitializedAsync()
+    {
+        Customers = await dataService.GetAllCustomers();
+    }
 }

@@ -1,6 +1,9 @@
 ﻿using BankingApp.Services.Interfaces;
 using BankingApp.DTO.UI;
 using System.Net.Http.Json;
+using BankingAppCore.Models.Customers;
+using Microsoft.EntityFrameworkCore.Storage.Json;
+using Newtonsoft.Json;
 
 
 namespace BankingApp.Services
@@ -65,7 +68,31 @@ namespace BankingApp.Services
             }            
         }
 
+        public async Task<List<Customer>> GetAllCustomers()
+        {
+            List<Customer> customers = new List<Customer>();
 
+            try
+            {
+                var response = await _httpClient.GetAsync("allcustomers");
+
+                if(response.IsSuccessStatusCode)
+                {
+                    string jsonReponse = await response.Content.ReadAsStringAsync();
+                    customers = JsonConvert.DeserializeObject<List<Customer>>(jsonReponse);
+                }
+                else
+                {
+                    Console.WriteLine($"Failed to get customer data. Status Code: {response.StatusCode}");
+                }
+            }
+            catch (HttpRequestException ex)
+            {
+                Console.WriteLine($"An error occurred while getting customers: {ex.Message}");
+            }
+
+            return customers;
+        }
 
 
 

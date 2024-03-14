@@ -1,4 +1,5 @@
-﻿using BankingAppCore.Models.Transactions;
+﻿using BankingAppCore.Models.Customers;
+using BankingAppCore.Models.Transactions;
 
 namespace BankingAppCore.Models.Accounts
 {
@@ -6,12 +7,11 @@ namespace BankingAppCore.Models.Accounts
     // Open/Closed - We can create subclasses to extend functionality.
     public abstract class Account
     {
-        public string id { get; set; }
-        public string customerId { get; set; }
-        public string accountId { get; set; }        
-        public AccountType accountType { get; set; }
-        public List<Transaction>? transactions { get; set; }
-        public decimal? balance { get; set; }
+        public string Id { get; set; }
+        public Customer Customer { get; set; }        
+        public AccountType AccountType { get; set; }
+        public List<Transaction>? Transactions { get; set; }
+        public decimal? Balance { get; set; }
     }
 
     public enum AccountType

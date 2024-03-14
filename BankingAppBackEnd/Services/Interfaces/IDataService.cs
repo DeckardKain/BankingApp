@@ -2,10 +2,11 @@
 {
     public interface IDataService<T>
     {
-        public bool Create(T entity);
-        public void Update(T entity);
-        public void Delete(T entity);
-        public T GetById(int id);
+        bool Create(T entity);
+        void Update(T entity);
+        void Delete(T entity);
+        T GetById(int id);
+        IEnumerable<T> GetAll();
 
     }
 }

@@ -18,28 +18,31 @@ namespace BankingAppBackEnd.Factories
         public bool CreateNewCustomerRegistration(UserRegisterDTO newUser)
         {
             var id = UUIDGenerator.GenerateUUID();
+
+            var customerData = new CustomerData()
+            {
+                CreatedDate = DateTime.Now,
+                Address = newUser.Address,
+                Email = newUser.Email,
+                Name = newUser.Name,
+                Id = UUIDGenerator.GenerateUUID()
+            };
+
+            var user = new User()
+            {
+                Username = newUser.Name,
+                Id = UUIDGenerator.GenerateUUID(),
+                IsAuthenticated = false,
+                Password = newUser.Password,
+                Role = Role.Customer
+            };
+
             var customer = new Customer()
             {
                 Id = id,
                 CustomerType = CustomerType.Regular,
-                CustomerData = new CustomerData()
-                {
-                    CreatedDate = DateTime.Now,
-                    CustomerId = id,
-                    Address = newUser.Address,
-                    Email = newUser.Email,
-                    Name = newUser.Name,
-                    Id = UUIDGenerator.GenerateUUID()
-                },
-                UserCredentials = new User()
-                {
-                    Username = newUser.Name,
-                    CustomerId = id,
-                    Id = UUIDGenerator.GenerateUUID(),
-                    IsAuthenticated = false,
-                    Password = newUser.Password,
-                    Role = Role.Customer
-                }
+                CustomerData = customerData,
+                UserCredentials = user
             };
 
             try

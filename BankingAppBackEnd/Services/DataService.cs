@@ -35,5 +35,10 @@ namespace BankingAppBackEnd.Services
         {
             return _repository.GetById(id);
         }
+
+        public IEnumerable<T> GetAll()
+        {
+            return _repository.GetAll();
+        }
     }
 }

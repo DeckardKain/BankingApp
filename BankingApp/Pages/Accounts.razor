@@ -24,11 +24,7 @@ else
                 <tbody>
                     @foreach (Account account in accounts)
                     {
-                        <tr>
-                            <td><a href="/accounts/@account.accountId">@account.accountType.ToString()</a></td>
-                            <td>@account.accountId</td>
-                            <td>@string.Format("{0:C}", account.balance)</td>
-                        </tr>
+    
                     }
                 </tbody>
 
