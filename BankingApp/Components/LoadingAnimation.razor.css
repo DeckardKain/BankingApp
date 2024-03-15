@@ -1,0 +1,11 @@
+﻿.loading-animation {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100px; /* Adjust height as needed */
+}
+
+    .loading-animation img {
+        width: 50px; /* Adjust width as needed */
+        height: 50px; /* Adjust height as needed */
+    }

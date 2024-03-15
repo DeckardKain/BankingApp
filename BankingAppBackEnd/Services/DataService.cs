@@ -12,33 +12,39 @@ namespace BankingAppBackEnd.Services
             _repository = new Repository<T>(dbContext);
         }
 
-        public bool Create(T entity)
+        public async Task<T> Create(T entity)
         {
-            if (_repository.Save(entity))
+            if (await _repository.Save(entity))
             {
-                return true;
+                return entity;
             }
-            return false;
+            return entity;
         }
 
-        public void Update(T entity)
+        public async Task Update(T entity)
         {
-            _repository.Update(entity);
+            await _repository.Update(entity);
         }
 
-        public void Delete(T entity)
+        public async Task Delete(T entity)
         {
-            _repository.Delete(entity);
+            await _repository.Delete(entity);
         }
 
-        public T GetById(int id)
+        public async Task<T> GetById(string id)
         {
-            return _repository.GetById(id);
+            return await _repository.GetById(id);
         }
 
-        public IEnumerable<T> GetAll()
+        public async Task<IEnumerable<T>> GetAll()
         {
-            return _repository.GetAll();
+            return await _repository.GetAll();
+        }
+
+
+        public async Task<T?> FindByColumnAsync(string columnName, string value)
+        {
+            return await _repository.FindByColumnAsync(columnName, value);
         }
     }
 }

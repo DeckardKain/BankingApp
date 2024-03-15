@@ -1,9 +1,10 @@
 ﻿using BankingApp.Services.Interfaces;
 using BankingApp.DTO.UI;
 using System.Net.Http.Json;
-using BankingAppCore.Models.Customers;
-using Microsoft.EntityFrameworkCore.Storage.Json;
 using Newtonsoft.Json;
+using BankingApp.DTO.Customer;
+using BankingApp.DTO.Account;
+
 
 
 namespace BankingApp.Services
@@ -25,25 +26,25 @@ namespace BankingApp.Services
     // Builder Pattern - The method CreateRandomTransactions can be seen as a simple form of the builder pattern, where it constructs complex objects (transactions) step by step using a consistent process.
 
     public class DataService : IDataService
-    {        
+    {
         private readonly IObserver _observer;
         private readonly ILogger _logger;
         private readonly HttpClient _httpClient;
 
 
         public DataService(IObserver observer, ILogger<DataService> logger, HttpClient httpClient)
-        {        
+        {
             _observer = observer ?? throw new ArgumentNullException(nameof(observer));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
-            _httpClient.BaseAddress = new Uri("https://localhost:7176/api");
+            _httpClient.BaseAddress = new Uri("https://localhost:7176/api/");
         }
 
         public async Task<bool> CreateNewCustomer(UserRegisterDTO userRegistration)
         {
             try
             {
-                var response = await _httpClient.PostAsJsonAsync("registernewcustomer", userRegistration);
+                var response = await _httpClient.PostAsJsonAsync("userregisterdto", userRegistration);
                 response.EnsureSuccessStatusCode();
 
                 return true;
@@ -52,34 +53,34 @@ namespace BankingApp.Services
             {
                 _logger.LogError(ex, "An error occurred while creating a new customer,");
 
-                if(ex.StatusCode == System.Net.HttpStatusCode.BadRequest)
+                if (ex.StatusCode == System.Net.HttpStatusCode.BadRequest)
                 {
                     // Example of string formatting
                     _logger.LogWarning("Bad request error occurred: {ErrorMessage}", ex.Message);
                 }
 
-                if(ex.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+                if (ex.StatusCode == System.Net.HttpStatusCode.Unauthorized)
                 {
                     // Example of string interpolation, the preferred way.
                     _logger.LogWarning($"Unauthorized: {ex.Message}");
                 }
 
                 return false;
-            }            
+            }
         }
 
-        public async Task<List<Customer>> GetAllCustomers()
+        public async Task<List<AllCustomerDTO>> GetAllCustomers()
         {
-            List<Customer> customers = new List<Customer>();
+            List<AllCustomerDTO> customers = new List<AllCustomerDTO>();
 
             try
             {
-                var response = await _httpClient.GetAsync("allcustomers");
+                var response = await _httpClient.GetAsync("getallcustomers");
 
-                if(response.IsSuccessStatusCode)
+                if (response.IsSuccessStatusCode)
                 {
                     string jsonReponse = await response.Content.ReadAsStringAsync();
-                    customers = JsonConvert.DeserializeObject<List<Customer>>(jsonReponse);
+                    customers = JsonConvert.DeserializeObject<List<AllCustomerDTO>>(jsonReponse);
                 }
                 else
                 {
@@ -93,6 +94,64 @@ namespace BankingApp.Services
 
             return customers;
         }
+
+        public async Task<UserLoginDTO> Login(UserLoginDTO loginDTO)
+        {
+            try
+            {
+                // Send the UserLoginDTO to the API for authentication
+                var response = await _httpClient.PostAsJsonAsync("authenticate", loginDTO);
+
+                // Check if the response is successful
+                if (response.IsSuccessStatusCode)
+                {
+                    // Deserialize the response content to get the login result
+                    var loginResult = await response.Content.ReadFromJsonAsync<UserLoginDTO>();
+                    return loginResult;
+                }
+                else
+                {
+                    // Handle unsuccessful response (e.g., log error, throw exception)
+                    Console.WriteLine($"Failed to login. Status Code: {response.StatusCode}");
+                    return new UserLoginDTO();
+                }
+            }
+            catch (Exception ex)
+            {
+                // Handle exception (e.g., log error, throw custom exception)
+                Console.WriteLine($"An error occurred while attempting to authenticate: {ex.Message}");
+                return new UserLoginDTO();
+            }
+        }
+
+        public async Task<AccountDTO> CreateNewAccount(AccountDTO accountDTO)
+        {
+            try
+            {
+                var response = await _httpClient.PostAsJsonAsync("newaccount", accountDTO);
+                // Check if the response is successful
+                if (response.IsSuccessStatusCode)
+                {
+                    // Deserialize the response content to get the login result
+                    var accountResult = await response.Content.ReadFromJsonAsync<AccountDTO>();
+                    return accountResult;
+                }
+                else
+                {
+                    // Handle unsuccessful response (e.g., log error, throw exception)
+                    Console.WriteLine($"Failed to login. Status Code: {response.StatusCode}");
+                    return new AccountDTO();
+                }
+            }       
+            catch (Exception ex)
+            {
+                // Handle exception (e.g., log error, throw custom exception)
+                Console.WriteLine($"An error occurred while attempting to authenticate: {ex.Message}");
+                return new AccountDTO();
+            }
+        }
+    }
+}
 
 
 
@@ -247,5 +306,3 @@ namespace BankingApp.Services
 
         //    return $"{prefix} {item}";
         //}
-    }
-}

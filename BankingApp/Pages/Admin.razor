@@ -1,4 +1,5 @@
 ﻿@page "/admin"
+
 @inject IDataService dataService
 
 @*This Page is to demonstrate where we can track the entire user to app interactions*@
@@ -75,7 +76,7 @@ else
 
 
 @code {
-    private List<Customer> Customers = new List<Customer>();
+    private List<AllCustomerDTO> Customers = new List<AllCustomerDTO>();
 
     protected override async Task OnInitializedAsync()
     {

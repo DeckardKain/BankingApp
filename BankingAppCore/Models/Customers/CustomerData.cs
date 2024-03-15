@@ -7,9 +7,9 @@
         public string? Email { get; set; }
         public string? PhoneNumber { get; set; }
         public string? Address { get; set; }
-        public DateTime CreatedDate { get; set; } = DateTime.Now;
+        public DateTime CreatedDate { get; set; }
 
-        // Navigation property - One to One
-        public Customer Customer { get; set; }
+        // Explicit Foriegn Key declaration
+        public string CustomerId { get; set; }
     }
 }

@@ -1,58 +1,72 @@
 ﻿using BankingAppCore.Models.Customers;
-using BankingApp.DTO.UI;
 using BankingAppBackEnd.Utilities;
 using BankingAppCore.Models.System;
 using BankingAppBackEnd.Services.Interfaces;
+using BankingAppCore.DTO.UI;
 
 namespace BankingAppBackEnd.Factories
 {
     public class CustomerFactory
     {
-        private readonly IDataService<Customer> _dataService;
+        private readonly IDataService<Customer> _customerDataService;
+        private readonly IDataService<CustomerData> _customerDataDataService;
+        private readonly IDataService<User> _userDataService;
 
-        public CustomerFactory(IDataService<Customer> dataService)
+        public CustomerFactory(IDataService<Customer> customerDataService, IDataService<CustomerData> customerDataDataService,
+            IDataService<User> userDataService)
         {
-            _dataService = dataService;
+            _customerDataService = customerDataService;
+            _customerDataDataService = customerDataDataService;
+            _userDataService = userDataService;
         }
 
-        public bool CreateNewCustomerRegistration(UserRegisterDTO newUser)
+        public async Task<Customer> CreateNewCustomerRegistration(UserRegisterDTO newUser)
         {
             var id = UUIDGenerator.GenerateUUID();
+            var CustomerDataId = UUIDGenerator.GenerateUUID();
+            var UserId = UUIDGenerator.GenerateUUID();            
 
             var customerData = new CustomerData()
             {
                 CreatedDate = DateTime.Now,
                 Address = newUser.Address,
+                PhoneNumber = newUser.PhoneNumber,
                 Email = newUser.Email,
                 Name = newUser.Name,
-                Id = UUIDGenerator.GenerateUUID()
+                Id = CustomerDataId,
+                CustomerId = id,
             };
+
+            await _customerDataDataService.Create(customerData);
 
             var user = new User()
             {
                 Username = newUser.Name,
-                Id = UUIDGenerator.GenerateUUID(),
+                Id = UserId,
                 IsAuthenticated = false,
                 Password = newUser.Password,
-                Role = Role.Customer
+                Role = Role.Customer,
+                CustomerId = id,
             };
+
+            await _userDataService.Create(user);
 
             var customer = new Customer()
             {
                 Id = id,
                 CustomerType = CustomerType.Regular,
-                CustomerData = customerData,
-                UserCredentials = user
+                CustomerDataId = CustomerDataId,
+                UserCredentialsId = UserId
             };
 
             try
             {
-                _dataService.Create(customer);
-                return true;
+                await _customerDataService.Create(customer);
+                return customer;
             }
             catch (Exception ex) 
             {
-                return false;
+                return customer;
             }
         }
     }

@@ -7,8 +7,8 @@ namespace BankingAppCore.Models.Accounts
     // Open/Closed - We can create subclasses to extend functionality.
     public abstract class Account
     {
-        public string Id { get; set; }
-        public Customer Customer { get; set; }        
+        public string Id { get; set; }  
+        public string CustomerId { get; set; }
         public AccountType AccountType { get; set; }
         public List<Transaction>? Transactions { get; set; }
         public decimal? Balance { get; set; }

@@ -1,4 +1,3 @@
-using BankingApp.Services.Interfaces;
 using BankingAppBackEnd.Data;
 using BankingAppBackEnd.Factories;
 using BankingAppBackEnd.Services;
@@ -11,6 +10,10 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddControllers();
+
+//builder.Services.AddControllersWithViews()
+//    .AddApplicationPart(typeof(HomeController<>).Assembly);
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -38,9 +41,16 @@ builder.Services.AddCors(options =>
     });
 });
 
-//builder.Services.AddScoped(typeof(IDataService<>), typeof(DataService<>));
+builder.Services.AddScoped(typeof(IDataService<>), typeof(DataService<>));
 builder.Services.AddScoped<IDataService<Customer>, DataService<Customer>>();
+builder.Services.AddScoped<IDataService<CustomerData>, DataService<CustomerData>>();
+builder.Services.AddScoped<ICustomerService, CustomerService>();
+builder.Services.AddScoped<ICustomerDataService, CustomerDataService>();
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<CustomerFactory>();
+
+
 
 var app = builder.Build();
 

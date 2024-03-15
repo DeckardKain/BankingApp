@@ -1,13 +1,16 @@
-﻿using BankingApp.DTO.UI;
-using BankingAppCore.Models.Customers;
-using Microsoft.AspNetCore.Mvc;
+﻿using BankingApp.DTO.Account;
+using BankingApp.DTO.Customer;
+using BankingApp.DTO.UI;
+
 
 namespace BankingApp.Services.Interfaces
 {
     public interface IDataService
     {
         Task<bool> CreateNewCustomer(UserRegisterDTO userRegistration);
-        Task<List<Customer>> GetAllCustomers();
+        Task<List<AllCustomerDTO>> GetAllCustomers();
+        Task<UserLoginDTO> Login(UserLoginDTO loginDTO);
+        Task<AccountDTO> CreateNewAccount(AccountDTO accountDTO);
 
     }
 }

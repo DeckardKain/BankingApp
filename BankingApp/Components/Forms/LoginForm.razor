@@ -4,7 +4,7 @@
 
 <div class="container mt-5">
     <div class="row justify-content-center">
-        <div class="col-md-6">
+        <div class="">
             <div class="card">
                 <div class="card-header">
                     <h5 class="card-title">Login</h5>
@@ -22,6 +22,10 @@
                             <InputText type="password" class="form-control" @bind-Value="@userLogin.Password" id="password" />
                             <ValidationMessage For="@(() => userLogin.Password)" />
                         </div>
+                        <div class="status-box @statusClass">
+                            <LoadingAnimation IsLoading=@IsLoading />
+                            @statusMessage
+                        </div>
                         <button type="submit" class="btn btn-primary">Login</button>
                     </EditForm>
                 </div>
@@ -37,6 +41,10 @@
 
     private UserLoginDTO userLogin = new UserLoginDTO();
 
+    private string? statusClass { get; set; }
+    private string? statusMessage { get; set; }
+
+    private bool IsLoading { get; set; }
 
     protected override void OnInitialized()
     {
@@ -45,16 +53,32 @@
 
     }
 
-    private void HandleValidSubmit()
+    private async void HandleValidSubmit()
     {
+        IsLoading = true;
         var state = new StateChangeDTO();
-        if(userInteraction.Authenticate(userLogin))
+
+        var result = await userInteraction.Authenticate(userLogin);
+
+        if (result)
         {
+            // Update CSS Style
+            statusClass = "success";
+            // Log Msg to UI
+            statusMessage = "Login Success!";
+            // Log Msg to Console
             state.Message = "GUI: User " + userLogin.Username + " successfully authenticated.";
+            IsLoading = false;
         }
         else
         {
+            // Update CSS Style
+            statusClass = "failure";
+            // Log Msg to UI
+            statusMessage = "Login Failed!";
+            // Log Msg to Console
             state.Message = "GUI: User " + userLogin.Username + " your access is denied.";
+            IsLoading = false;
         }        
 
         // Invokes a method in the parent component to demonstrate parent child communication.

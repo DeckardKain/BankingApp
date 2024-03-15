@@ -1,5 +1,5 @@
-﻿using BankingApp.DTO.UI;
-using System.Runtime.InteropServices;
+﻿using BankingApp.DTO.Account;
+using BankingApp.DTO.UI;
 
 namespace BankingApp.Services.Interfaces
 {
@@ -7,7 +7,9 @@ namespace BankingApp.Services.Interfaces
     {
         string Username { get; set; }
         bool isAuthenticated { get; set; }
-        bool Authenticate(UserLoginDTO userLogin);
-        
+        string UserId { get; set; }
+        Task<bool> Authenticate(UserLoginDTO userLogin);
+        Task<AccountDTO> CreateNewAccount(AccountDTO accountDTO);
+
     }
 }

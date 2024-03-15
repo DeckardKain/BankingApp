@@ -1,28 +1,35 @@
-﻿using BankingApp.DTO.UI; // cheating here a little :)
-using Microsoft.AspNetCore.Mvc;
-using System.Text.Json;
-using BankingAppBackEnd.Data;
-using BankingAppCore.Models.Customers;
-using BankingAppBackEnd.Factories;
+﻿using Microsoft.AspNetCore.Mvc;
+using BankingAppBackEnd.Services.Interfaces;
+using BankingAppCore.DTO.UI;
+using BankingAppCore.DTO.Customer;
+using BankingAppCore.DTO.Account;
 
 namespace BankingAppBackEnd.Controllers
 {
     public class HomeController : Controller
     {
         private readonly HttpClient _httpClient;
-        private readonly CustomerFactory _customerFactory;
+        private readonly ICustomerService _customerService;
+        private readonly ICustomerDataService _customerDataService;
+        private readonly IUserService _userService;
+        private readonly IAccountService _accountService;
 
-        public HomeController(IHttpClientFactory httpClientFactory, CustomerFactory customerFactory)
+        public HomeController(IHttpClientFactory httpClientFactory, ICustomerService customerService,
+            ICustomerDataService customerDataService, IUserService userService,
+            IAccountService accountService)
         {
             _httpClient = httpClientFactory.CreateClient("BankingAppFrontEnd");
-            _customerFactory = customerFactory;
+            _customerService = customerService;
+            _customerDataService = customerDataService;
+            _userService = userService;
+            _accountService = accountService;
         }
 
-        [HttpPost("registernewcustomer")]
+        [HttpPost("api/userregisterdto")]
         public IActionResult HandleNewUserPostRequest([FromBody] UserRegisterDTO data)
         {
             try
-            {                
+            {
                 var userDTO = data;
                 if (userDTO == null)
                 {
@@ -36,97 +43,70 @@ namespace BankingAppBackEnd.Controllers
 
                 // Create new customer
 
-                var newCustomer = _customerFactory.CreateNewCustomerRegistration(userDTO);
+                var newCustomer = _customerService.CreateNewCustomer(userDTO);
 
                 return Ok();
 
 
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Console.WriteLine($"An error occurred: {ex.Message} Stack Trace: {ex.StackTrace}");
 
                 return StatusCode(500, "An error occured while processing the request.");
             }
-
-
-            
         }
 
-
-        // GET: HomeController
-        public ActionResult Index()
+        [HttpGet("api/getallcustomers")]
+        public async Task<IActionResult> GetAllCustomeres()
         {
-            return View();
-        }
+            List<AllCustomersDTO> customerDTOs = new List<AllCustomersDTO>();
 
-        // GET: HomeController/Details/5
-        public ActionResult Details(int id)
-        {
-            return View();
-        }
-
-        // GET: HomeController/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: HomeController/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
-        {
             try
             {
-                return RedirectToAction(nameof(Index));
+                var customers = await _customerService.GetAllCustomers();
+
+                if (customers == null || !customers.Any())
+                {
+                    return NoContent(); // If no customers found, return 204 No Content
+                }
+
+                foreach (var customer in customers)
+                {
+                    var customerDTO = new AllCustomersDTO()
+                    {
+                        Id = customer.Id,
+                        CustomerData = await _customerDataService.GetCustomerDataById(customer.CustomerDataId),
+                        CustomerType = customer.CustomerType.Value,
+                        UserCredentials = await _userService.GetUserById(customer.UserCredentialsId)
+                    };
+
+                    customerDTOs.Add(customerDTO);
+                }
+
+
+                return Ok(customerDTOs);
             }
-            catch
+            catch (Exception ex)
             {
-                return View();
+                // Return 500 Internal Server Error
+                return StatusCode(500, "An error occurred while retrieving customers.");
             }
         }
 
-        // GET: HomeController/Edit/5
-        public ActionResult Edit(int id)
+
+        [HttpPost("api/authenticate")]
+        public async Task<ActionResult<UserLoginDTO>> AuthenticateUser([FromBody]UserLoginDTO userLoginDTO)
         {
-            return View();
+            var authenicationResult = await _userService.AuthenticateUser(userLoginDTO);
+            return authenicationResult;
         }
 
-        // POST: HomeController/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        [HttpPost("api/newaccount")]
+        public async Task<ActionResult<AccountDTO>> CreateNewAccount([FromBody]AccountDTO accountDTO)
         {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: HomeController/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: HomeController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            var newAccountResult = await _accountService.CreateNewAccount(accountDTO);
+            return Ok(newAccountResult);
         }
     }
 }

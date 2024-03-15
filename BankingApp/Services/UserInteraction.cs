@@ -1,4 +1,5 @@
-﻿using BankingApp.DTO.System;
+﻿using BankingApp.DTO.Account;
+using BankingApp.DTO.System;
 using BankingApp.DTO.UI;
 using BankingApp.Managers;
 using BankingApp.Services.Interfaces;
@@ -14,35 +15,55 @@ namespace BankingApp.Services
     public class UserInteraction : IUserInteraction
     {
         private readonly IObserver _observer;
+        private readonly IDataService _dataService;
 
         public string Username { get; set; } = default!;
         public bool isAuthenticated { get; set; } = false;
+        public string UserId { get; set; } = default!;
         public Role Role { get; set; }
-        public UserInteraction(IObserver observer)
+        public UserInteraction(IObserver observer, IDataService dataService)
         {
             _observer = observer;
+            _dataService = dataService;
         }
 
-        public bool Authenticate(UserLoginDTO userLogin)
+        public async Task<bool> Authenticate(UserLoginDTO userLogin)
         {
-            Username = userLogin.Username;
-            isAuthenticated = true;
-            userLogin.LoginResult = true;
-            
-            // Update AppManager of a new user login.
+            // Call Backend VIA API to authenticate and return Customer Info.
 
-            AppManager.AddNewUserLogin(userLogin);
+            var result = await _dataService.Login(userLogin);
 
-            // Observer pattern demonstration for console logging
-
-            var state = new StateChangeDTO()
+            if (result.LoginResult)
             {
-                Message = "User Interaction: User " + Username + " has successfully authenticated."
-            };
-            
-            _observer.Notify(state);
+                // Update App of new Authentication
+                Username = userLogin.Username;
+                isAuthenticated = true;
+                UserId = userLogin != 
 
-            return true;
+                // Update AppManager of a new user login.
+                AppManager.AddNewUserLogin(result);
+
+                // Observer pattern demonstration for console logging
+                var state = new StateChangeDTO()
+                {
+                    Message = "User Interaction: User " + Username + " has successfully authenticated."
+                };
+
+                _observer.Notify(state);
+
+                return true;
+            }
+            else
+            {
+                return false;
+            }          
+        }
+
+
+        public async Task<AccountDTO> CreateNewAccount(AccountDTO accountDTO)
+        {
+            var result = await _dataService.CreateNewAccount(accountDTO);
+            return result;
         }
     }
 }

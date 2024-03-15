@@ -1,0 +1,56 @@
+﻿
+<div class="d-flex justify-content-center align-items-center mb-lg-5">
+    <div class="w-50">
+        <ul class="nav nav-tabs">
+            @foreach (var tab in Tabs)
+            {
+                <li class="nav-item">
+                    <a class="nav-link @GetActiveClass(tab)" @onclick="() => ActivateTab(tab)">@tab.Title</a>
+                </li>
+            }
+        </ul>
+        <div class="tab-content w-100 v-100">
+            @foreach (var tab in Tabs)
+            {
+                <div class="@GetTabContentClass(tab)">
+                    @tab.Content
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public List<Tab> Tabs { get; set; } = new List<Tab>();
+
+    private Tab activeTab;
+
+    private string GetActiveClass(Tab tab) => tab == activeTab ? "active" : "";
+
+    private string GetTabContentClass(Tab tab) => tab == activeTab ? "tab-pane fade show active" : "tab-pane fade";
+
+    private void ActivateTab(Tab tab)
+    {
+        activeTab = tab;
+    }
+
+    protected override void OnInitialized()
+    {
+        var loginTab = new Tab()
+            {
+                Title = "Login",
+                Content =@<LoginForm />
+            };
+        
+        Tabs.Add(loginTab);
+        var registerTab = new Tab()
+            {
+                Title = "Sign Up",
+                Content =@<RegistrationForm />
+        };
+        Tabs.Add(registerTab);
+
+        activeTab = loginTab;
+    }
+}

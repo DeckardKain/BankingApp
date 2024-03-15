@@ -8,7 +8,7 @@ namespace BankingAppCore.Models.Transactions
     public abstract class Transaction
     {
         public int Id { get; set; }
-        public Account Account { get; set; }
+        public string AccountId { get; set; }
         public TransactionType TransactionType { get; set; }
         public string? MerchantInfo { get; set; }
         public DateTime DateTime { get; set; }

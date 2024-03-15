@@ -1,4 +1,5 @@
-﻿using BankingAppCore.Models.Accounts;
+﻿using BankingAppBackEnd.Utilities;
+using BankingAppCore.Models.Accounts;
 using BankingAppCore.Models.Customers;
 using BankingAppCore.Models.System;
 using BankingAppCore.Models.Transactions;
@@ -25,51 +26,62 @@ namespace BankingAppBackEnd.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            SeedCustomers(modelBuilder);
 
-            // Configure a 1 to 1 relationship with Customer and CustomerData
-            modelBuilder.Entity<Customer>()
-                .HasOne(c => c.CustomerData)
-                .WithOne(cd => cd.Customer)
-                .HasForeignKey<CustomerData>(cd => cd.Id)
-                .IsRequired();
+            //// Configure a 1 to 1 relationship with Customer and CustomerData
+            //modelBuilder.Entity<Customer>()
+            //    .HasForeignKey<CustomerData>(cd => cd.Id)
+            //    .IsRequired();
 
-            // Configure one to many relationship between Customer and Account
-            modelBuilder.Entity<Customer>()
-                .HasMany(c => c.Accounts)
-                .WithOne(a => a.Customer)
-                .IsRequired();
+            //// Configure one to many relationship between Customer and Account
+            //modelBuilder.Entity<Customer>()
+            //    .HasMany(c => c.Accounts)
+            //    .WithOne(a => a.Customer)
+            //    .IsRequired();
 
-            // Configure one to one relationship between Customer and User
-            modelBuilder.Entity<Customer>()
-                .HasOne(c => c.UserCredentials)
-                .WithOne(cd => cd.Customer)
-                .IsRequired();
-            
-            // Configure many to one relationship between Account and Customer
-            modelBuilder.Entity<Account>()
-                .HasOne(a => a.Customer)
-                .WithMany(a => a.Accounts)
-                .IsRequired();
+            //// Configure one to one relationship between Customer and User
+            //modelBuilder.Entity<Customer>()
+            //    .HasForeignKey<User>(u => u.CustomerId)
+            //    .IsRequired();
+
+            //// Configure many to one relationship between Account and Customer
+            //modelBuilder.Entity<Account>()
+            //    .HasOne(a => a.Customer)
+            //    .WithMany(c => c.Accounts)
+            //    .IsRequired();
 
 
-            // Configure one to many relationship between Account and Transaction
-            modelBuilder.Entity<Account>()
-                .HasMany(t => t.Transactions)
-                .WithOne(a => a.Account)
-                .IsRequired();
+            //// Configure Indexing to improve performance on the CustomerId column in CustomerData
+            //modelBuilder.Entity<CustomerData>()
+            //    .HasIndex(cd => cd.CustomerId);
 
-            // Configure many to one relationship between Transaction and Account
-            modelBuilder.Entity<Transaction>()
-                .HasOne(t => t.Account)
-                .WithMany(a => a.Transactions)
-                .IsRequired();
+            //// Configure one to many relationship between Account and Transaction
+            //modelBuilder.Entity<Account>()
+            //    .HasMany(a => a.Transactions)
+            //    .WithOne(t => t.Account)
+            //    .IsRequired();
 
-            // Configure one to one relationship between User and Customer
-            modelBuilder.Entity<User>()
-                .HasOne(u => u.Customer)
-                .WithOne(u => u.UserCredentials)
-                .IsRequired();
+            //// Configure many to one relationship between Transaction and Account
+            //modelBuilder.Entity<Transaction>()
+            //    .HasOne(t => t.Account)
+            //    .WithMany(a => a.Transactions)
+            //    .IsRequired();
 
+            //// Configure one to one relationship between User and Customer
+            //modelBuilder.Entity<User>()
+            //    .HasOne(u => u.Customer)
+            //    .HasForeignKey<Customer>(c => c.UserCredentialsId)
+            //    .IsRequired();
+
+        }
+
+
+        private void SeedCustomers(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Customer>().HasData(
+                new Customer { Id = UUIDGenerator.GenerateUUID(), CustomerType = CustomerType.Regular},
+                new Customer { Id = UUIDGenerator.GenerateUUID(), CustomerType = CustomerType.Regular}                
+            );
         }
 
     }

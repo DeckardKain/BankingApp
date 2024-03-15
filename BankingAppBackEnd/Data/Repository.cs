@@ -1,5 +1,5 @@
-﻿using BankingAppCore.Models.Customers;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 
 namespace BankingAppBackEnd.Data
@@ -15,11 +15,11 @@ namespace BankingAppBackEnd.Data
             _dbSet = _dbContext.Set<T>();
         }
 
-        public bool Save(T entity)
+        public async Task<bool> Save(T entity)
         {
             try
             {
-                _dbSet.Add(entity);
+                await _dbSet.AddAsync(entity);
                 _dbContext.SaveChanges();
                 return true;
             }
@@ -30,12 +30,12 @@ namespace BankingAppBackEnd.Data
             }
         }
 
-        public void Update(T entity)
+        public async Task Update(T entity)
         {
             try
             {
                 _dbSet.Update(entity);
-                _dbContext.SaveChanges();
+                await _dbContext.SaveChangesAsync();
             }
             catch(Exception ex)
             {
@@ -45,26 +45,25 @@ namespace BankingAppBackEnd.Data
 
         }
 
-        public void Delete(T entity) 
+        public async Task Delete(T entity) 
         {
             try
             {
                 _dbSet.Remove(entity);
-                _dbContext.SaveChanges();
+                await _dbContext.SaveChangesAsync();
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"An error occurred while deleting {typeof(T).Name}: {ex.Message}");
                 throw;
             }
-
         }
 
-        public T? GetById(int id)
+        public async Task<T?> GetById(string id)
         {
             try
             {
-                return _dbSet.Find(id);
+                return await _dbSet.FindAsync(id);
             }
             catch (Exception ex)
             {
@@ -73,21 +72,39 @@ namespace BankingAppBackEnd.Data
             }            
         }
 
-        public IEnumerable<T> GetAll()
+        public async Task<IEnumerable<T>> GetAll()
         {
             try
             {
-                if(typeof(T) == typeof(Customer))
-                {
-                    return _dbSet.Include("CustomerData").ToList();
-                }
-                
-                return _dbSet.ToList();
+                var entities = await _dbSet.ToListAsync();
+                return entities;
 
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"An error occurred while fetching all {typeof(T).Name} records: {ex.Message}");
+                throw;
+            }
+        }
+
+        public async Task<T?> FindByColumnAsync(string columnName, string value)
+        {
+            try
+            {
+                // Dynamically build expression to search for the value in the specified column
+                var parameter = Expression.Parameter(typeof(T));
+                var property = Expression.Property(parameter, columnName);
+                var propertyValue = Expression.Constant(value);
+                var predicate = Expression.Equal(property, propertyValue);
+                var lambda = Expression.Lambda<Func<T, bool>>(predicate, parameter);
+
+                // Use the dynamically created expression to filter the DbSet
+                var entity = await _dbSet.FirstOrDefaultAsync(lambda);
+                return entity;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred while finding {typeof(T).Name} by column: {ex.Message}");
                 throw;
             }
         }

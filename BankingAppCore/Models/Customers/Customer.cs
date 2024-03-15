@@ -6,10 +6,17 @@ namespace BankingAppCore.Models.Customers
     // Single Responsilibility - 
     public class Customer
     {
+        // Primary key for Customer Class.
         public string Id { get; set; }
-        public CustomerData? CustomerData { get; set; }
-        public CustomerType CustomerType { get; set; }
-        public User? UserCredentials { get; set; }
+
+        // Foriegn key property to maintain the relationship with CustomerData
+        public string? CustomerDataId { get; set; }
+
+        public CustomerType? CustomerType { get; set; }
+
+        // Foreign key property for User Creds
+        public string? UserCredentialsId { get; set; }
+
         public List<Account>? Accounts { get; set; }
     }
 

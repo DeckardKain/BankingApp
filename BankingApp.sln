@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BankingApp", "BankingApp\Ba
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BankingAppBackEnd", "BankingAppBackEnd\BankingAppBackEnd.csproj", "{ED7A49AD-C208-43AF-BD78-F8F08249BB7F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BankingAppCore", "BankingAppCore\BankingAppCore.csproj", "{14D20B84-A2B1-4106-9D7D-3130B0F9D0F1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BankingAppCore", "BankingAppCore\BankingAppCore.csproj", "{14D20B84-A2B1-4106-9D7D-3130B0F9D0F1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

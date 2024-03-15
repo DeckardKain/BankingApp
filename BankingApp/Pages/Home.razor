@@ -1,5 +1,6 @@
 ﻿@page "/"
 
+
 @inject IUserInteraction userInteraction
 @inject IUIService UIService
 @inject IDataService dataService
@@ -39,12 +40,11 @@ else
 
 @if (!userInteraction.isAuthenticated)
 {
-    <LoginForm onLogin="UpdateUI"></LoginForm>
-    <RegistrationForm />
+    <LoginSignUpComponent />
 }
 else
 {
-    
+
 }
 
 

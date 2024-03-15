@@ -2,11 +2,11 @@
 {
     public interface IDataService<T>
     {
-        bool Create(T entity);
-        void Update(T entity);
-        void Delete(T entity);
-        T GetById(int id);
-        IEnumerable<T> GetAll();
-
+        Task<T> Create(T entity);
+        Task Update(T entity);
+        Task Delete(T entity);
+        Task<T> GetById(string id);
+        Task<IEnumerable<T>> GetAll();
+        Task<T?> FindByColumnAsync(string columnName, string value);
     }
 }
