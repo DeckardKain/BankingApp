@@ -27,6 +27,7 @@ namespace BankingAppBackEnd.Services
                 if (dbUser.Password == userLoginDTO.Password)
                 {
                     userLoginDTO.LoginResult = true;
+                    userLoginDTO.UserId = dbUser.Id;
                 }
             }
             else

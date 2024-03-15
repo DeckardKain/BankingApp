@@ -22,7 +22,7 @@ else
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (Account account in accounts)
+                    @foreach (AccountDTO account in accounts)
                     {
     
                     }
@@ -30,6 +30,8 @@ else
 
             </table>
         </div>
+        <br />
+        <NewAccountForm />
     }
     else
     {
@@ -42,13 +44,13 @@ else
 @code {
 
     Customer customer = new Customer();
-    List<Account> accounts = new List<Account>();
+    List<AccountDTO> accounts = new List<AccountDTO>();
 
-    protected override void OnInitialized()
+    protected override async void OnInitialized()
     {
         try
         {
-      
+            
         }
         catch (Exception ex)
         {

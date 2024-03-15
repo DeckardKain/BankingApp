@@ -109,5 +109,20 @@ namespace BankingAppBackEnd.Data
             }
         }
 
+        public async Task<IEnumerable<T>> GetAllByCustomerId(string customerId)
+        {
+            try
+            {
+                var entities = await _dbSet.Where(x => EF.Property<string>(x, "CustomerId") == customerId).ToListAsync();
+                return entities;
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred while fetching all {typeof(T).Name} records: {ex.Message}");
+                throw;
+            }
+        }
+
     }
 }

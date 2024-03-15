@@ -8,5 +8,6 @@
         Task<T> GetById(string id);
         Task<IEnumerable<T>> GetAll();
         Task<T?> FindByColumnAsync(string columnName, string value);
+        Task<IEnumerable<T>> FindAllById(string id);
     }
 }

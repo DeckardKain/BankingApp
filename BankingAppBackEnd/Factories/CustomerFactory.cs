@@ -41,7 +41,7 @@ namespace BankingAppBackEnd.Factories
 
             var user = new User()
             {
-                Username = newUser.Name,
+                Username = newUser.Username,
                 Id = UserId,
                 IsAuthenticated = false,
                 Password = newUser.Password,

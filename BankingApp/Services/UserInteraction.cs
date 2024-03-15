@@ -38,7 +38,7 @@ namespace BankingApp.Services
                 // Update App of new Authentication
                 Username = userLogin.Username;
                 isAuthenticated = true;
-                UserId = userLogin != 
+                UserId = result.UserId;
 
                 // Update AppManager of a new user login.
                 AppManager.AddNewUserLogin(result);

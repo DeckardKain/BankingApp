@@ -50,6 +50,7 @@ else
     <table class="table table-striped">
         <thead>
             <tr>
+                <th>User ID</th>
                 <th>Username</th>
                 <th>Password</th>
                 <th>Is Authenticated</th>
@@ -59,9 +60,10 @@ else
             @foreach (var user in AppManager.LoggedInUsers)
             {
                 <tr>
+                    <td>@user.UserId</td>
                     <td>@user.Username</td>
                     <td>@user.Password</td>
-                    <td>@user.IsAuthenticated</td>
+                    <td>@user.LoginResult</td>
                 </tr>
             }
         </tbody>

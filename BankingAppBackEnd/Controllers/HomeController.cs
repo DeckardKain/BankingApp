@@ -108,5 +108,27 @@ namespace BankingAppBackEnd.Controllers
             var newAccountResult = await _accountService.CreateNewAccount(accountDTO);
             return Ok(newAccountResult);
         }
+
+        [HttpGet("api/getallaccountsbyid")]
+        public async Task<ActionResult<List<AccountDTO>>> GetAllAccountsById([FromBody]string id)
+        {
+            var accountsDTO = new List<AccountDTO>();
+            var accounts = await _accountService.GetAllAccountsById(id);
+
+            foreach (var account in accounts)
+            {
+                var acc = new AccountDTO()
+                {
+                    AccountType = account.AccountType,
+                    Balance = account.Balance,
+                    CustomerId = account.CustomerId,
+                    Id = account.Id
+                };
+
+                accountsDTO.Add(acc);
+            }
+
+            return Ok(accountsDTO);
+        }
     }
 }

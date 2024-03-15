@@ -12,8 +12,6 @@ namespace BankingApp.DTO.Customer
         public CustomerType CustomerType { get; set; }
 
         public User? UserCredentials { get; set; }
-
-        public List<Account>? Accounts { get; set; }
     }
 }
 

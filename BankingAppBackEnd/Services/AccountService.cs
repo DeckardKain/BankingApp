@@ -20,7 +20,14 @@ namespace BankingAppBackEnd.Services
         {
             var newAccount = await _accountFactory.Create(accountDTO);
             return newAccount;
-
         }
+
+        public async Task<List<Account>> GetAllAccountsById(string id)
+        {
+            var accounts = (await _dataService.FindAllById(id)).ToList();
+   
+            return accounts;
+        }
+
     }
 }

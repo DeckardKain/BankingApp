@@ -49,6 +49,7 @@ builder.Services.AddScoped<ICustomerDataService, CustomerDataService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<CustomerFactory>();
+builder.Services.AddScoped<AccountFactory>();
 
 
 

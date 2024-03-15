@@ -7,6 +7,7 @@ using BankingApp.DTO.Account;
 
 
 
+
 namespace BankingApp.Services
 {
 
@@ -150,6 +151,35 @@ namespace BankingApp.Services
                 return new AccountDTO();
             }
         }
+
+
+        public async Task<List<AccountDTO>> GetAllAccountsByCustomerId(string id)
+        {
+            try
+            {
+                var response = await _httpClient.PostAsJsonAsync("getallaccountsbyid", id);
+                // Check if the response is successful
+                if (response.IsSuccessStatusCode)
+                {
+                    // Deserialize the response content to get the result
+                    var result = await response.Content.ReadFromJsonAsync<List<AccountDTO>>();
+                    return result;
+                }
+                else
+                {
+                    // Handle unsuccessful response (e.g., log error, throw exception)
+                    Console.WriteLine($"Failed to login. Status Code: {response.StatusCode}");
+                    return new List<AccountDTO>();
+                }
+            }
+            catch (Exception ex)
+            {
+                // Handle exception (e.g., log error, throw custom exception)
+                Console.WriteLine($"An error occurred while attempting to authenticate: {ex.Message}");
+                return new List<AccountDTO>();
+            }
+        }
+
     }
 }
 

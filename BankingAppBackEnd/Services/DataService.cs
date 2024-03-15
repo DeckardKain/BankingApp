@@ -46,5 +46,11 @@ namespace BankingAppBackEnd.Services
         {
             return await _repository.FindByColumnAsync(columnName, value);
         }
+
+        public async Task<IEnumerable<T>> FindAllById(string id)
+        {
+            return await _repository.GetAllByCustomerId(id);
+        }
+
     }
 }

@@ -1,5 +1,4 @@
 ﻿using BankingApp.DTO.UI;
-using BankingAppCore.Models.System;
 
 namespace BankingApp.Managers
 {
@@ -29,18 +28,14 @@ namespace BankingApp.Managers
         
         public delegate void OnUserLogin(UserLoginDTO userLoginDTO);
                         
-        public static List<User> LoggedInUsers = new List<User>();        
+        public static List<UserLoginDTO> LoggedInUsers = new List<UserLoginDTO>();        
 
         public static void AddNewUserLogin(UserLoginDTO userLogin)
         {
-            var user = new User();
-            user.Username = userLogin.Username;
-            user.Password = userLogin.Password;
-            user.IsAuthenticated = userLogin.LoginResult;
 
-            if (user.IsAuthenticated)
+            if (userLogin.LoginResult)
             {
-                LoggedInUsers.Add(user);
+                LoggedInUsers.Add(userLogin);
             }
         }
 
