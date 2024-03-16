@@ -1,4 +1,5 @@
-﻿using BankingAppBackEnd.Utilities;
+﻿using BankingAppBackEnd.Factories;
+using BankingAppBackEnd.Services.Interfaces;
 using BankingAppCore.Models.Accounts;
 using BankingAppCore.Models.Customers;
 using BankingAppCore.Models.System;
@@ -23,66 +24,28 @@ namespace BankingAppBackEnd.Data
         public DbSet<Withdrawal> Withdrawals { get; set; }
         public DbSet<User> Users { get; set; }
 
-
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        public async Task SeedInitialData(IServiceProvider serviceProvider)
         {
-            SeedCustomers(modelBuilder);
+            // Resolve the required services
+            var customerDataService = serviceProvider.GetRequiredService<IDataService<Customer>>();
+            var customerDataDataService = serviceProvider.GetRequiredService<IDataService<CustomerData>>();
+            var userDataService = serviceProvider.GetRequiredService<IDataService<User>>();
+            var accountDataService = serviceProvider.GetRequiredService<IDataService<Account>>();
 
-            //// Configure a 1 to 1 relationship with Customer and CustomerData
-            //modelBuilder.Entity<Customer>()
-            //    .HasForeignKey<CustomerData>(cd => cd.Id)
-            //    .IsRequired();
+            // Create an instance of CustomerFactory and pass in the services
+            var customerFactory = new CustomerFactory(customerDataService, customerDataDataService, userDataService);
 
-            //// Configure one to many relationship between Customer and Account
-            //modelBuilder.Entity<Customer>()
-            //    .HasMany(c => c.Accounts)
-            //    .WithOne(a => a.Customer)
-            //    .IsRequired();
+            // CustomerFactory object to create customers
+            await customerFactory.CreateCustomers(10);
 
-            //// Configure one to one relationship between Customer and User
-            //modelBuilder.Entity<Customer>()
-            //    .HasForeignKey<User>(u => u.CustomerId)
-            //    .IsRequired();
+            var accountFactory = new AccountFactory(accountDataService, customerDataService);
 
-            //// Configure many to one relationship between Account and Customer
-            //modelBuilder.Entity<Account>()
-            //    .HasOne(a => a.Customer)
-            //    .WithMany(c => c.Accounts)
-            //    .IsRequired();
-
-
-            //// Configure Indexing to improve performance on the CustomerId column in CustomerData
-            //modelBuilder.Entity<CustomerData>()
-            //    .HasIndex(cd => cd.CustomerId);
-
-            //// Configure one to many relationship between Account and Transaction
-            //modelBuilder.Entity<Account>()
-            //    .HasMany(a => a.Transactions)
-            //    .WithOne(t => t.Account)
-            //    .IsRequired();
-
-            //// Configure many to one relationship between Transaction and Account
-            //modelBuilder.Entity<Transaction>()
-            //    .HasOne(t => t.Account)
-            //    .WithMany(a => a.Transactions)
-            //    .IsRequired();
-
-            //// Configure one to one relationship between User and Customer
-            //modelBuilder.Entity<User>()
-            //    .HasOne(u => u.Customer)
-            //    .HasForeignKey<Customer>(c => c.UserCredentialsId)
-            //    .IsRequired();
+            await accountFactory.CreateAccounts();
 
         }
+ 
 
 
-        private void SeedCustomers(ModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<Customer>().HasData(
-                new Customer { Id = UUIDGenerator.GenerateUUID(), CustomerType = CustomerType.Regular},
-                new Customer { Id = UUIDGenerator.GenerateUUID(), CustomerType = CustomerType.Regular}                
-            );
-        }
 
     }
 }

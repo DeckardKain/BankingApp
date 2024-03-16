@@ -5,9 +5,6 @@ using Newtonsoft.Json;
 using BankingApp.DTO.Customer;
 using BankingApp.DTO.Account;
 
-
-
-
 namespace BankingApp.Services
 {
 
@@ -157,7 +154,7 @@ namespace BankingApp.Services
         {
             try
             {
-                var response = await _httpClient.PostAsJsonAsync("getallaccountsbyid", id);
+                var response = await _httpClient.GetAsync($"getallaccountsbyid?id={id}");
                 // Check if the response is successful
                 if (response.IsSuccessStatusCode)
                 {

@@ -2,16 +2,19 @@
 using BankingAppBackEnd.Utilities;
 using BankingAppCore.DTO.Account;
 using BankingAppCore.Models.Accounts;
+using BankingAppCore.Models.Customers;
 
 namespace BankingAppBackEnd.Factories
 {
     public class AccountFactory
     {
         private readonly IDataService<Account> _accountDataService;
+        private readonly IDataService<Customer> _customerDataService;
 
-        public AccountFactory(IDataService<Account> accountDataService)
+        public AccountFactory(IDataService<Account> accountDataService, IDataService<Customer> customerDataService)
         {
             _accountDataService = accountDataService;
+            _customerDataService = customerDataService;
         }
 
         public async Task<AccountDTO> Create(AccountDTO accountDTO)
@@ -23,7 +26,7 @@ namespace BankingAppBackEnd.Factories
                     {
                         Id = UUIDGenerator.GenerateUUID(),
                         CustomerId = accountDTO.CustomerId,
-                        Balance = 0                        
+                        Balance = 0,                        
                     };
 
                     var newChequingAccount = await _accountDataService.Create(chequingAccount);
@@ -64,6 +67,19 @@ namespace BankingAppBackEnd.Factories
 
                     return accountDTO;
             }
+        }
+
+
+        public async Task CreateAccounts()
+        {
+            var customers = await _customerDataService.GetAll();
+
+            foreach(var customer in customers) 
+            {
+                var account = ObjectGenerator.GenerateRandomAccount(customer.Id);
+                await Create(account);
+            }
+
         }
     }
 }

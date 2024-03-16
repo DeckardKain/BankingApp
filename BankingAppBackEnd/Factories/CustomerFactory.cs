@@ -69,5 +69,32 @@ namespace BankingAppBackEnd.Factories
                 return customer;
             }
         }
+
+        public async Task CreateCustomers(int count)
+        {
+            await CreateStaticCustomer();
+
+            for (int i = 0; i < count; i++)
+            {
+                var customer = ObjectGenerator.GenerateUserRegisterObject();
+                await CreateNewCustomerRegistration(customer);                
+            }
+        }
+
+        public async Task CreateStaticCustomer()
+        {
+            var customer = new UserRegisterDTO()
+            {
+                Address = "123 Fake Street",
+                Email = "phil@phil.com",
+                Name = "Phil",
+                Password = "password",
+                PhoneNumber = "1234567890",
+                Username = "pmullins"
+            };
+
+            await CreateNewCustomerRegistration(customer);
+        }
+
     }
 }

@@ -10,7 +10,7 @@
 }
 else
 {
-    @if (accounts != null)
+    @if (accounts != null && accounts.Count > 0)
     {
         <div class="table-responsive table-dark">
             <table class="table table-striped table-bordered" style="width:50%;">
@@ -31,12 +31,9 @@ else
             </table>
         </div>
         <br />
-        <NewAccountForm />
-    }
-    else
-    {
         
     }
+    <NewAccountForm />
 }
 
 
@@ -49,8 +46,8 @@ else
     protected override async void OnInitialized()
     {
         try
-        {
-            
+        {           
+           accounts = await userService.GetAllAccountsById(userService.UserId);
         }
         catch (Exception ex)
         {

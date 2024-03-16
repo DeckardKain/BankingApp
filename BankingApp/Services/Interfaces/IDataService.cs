@@ -11,6 +11,7 @@ namespace BankingApp.Services.Interfaces
         Task<List<AllCustomerDTO>> GetAllCustomers();
         Task<UserLoginDTO> Login(UserLoginDTO loginDTO);
         Task<AccountDTO> CreateNewAccount(AccountDTO accountDTO);
+        Task<List<AccountDTO>> GetAllAccountsByCustomerId(string id);
 
     }
 }

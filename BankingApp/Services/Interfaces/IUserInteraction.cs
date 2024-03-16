@@ -10,6 +10,7 @@ namespace BankingApp.Services.Interfaces
         string UserId { get; set; }
         Task<bool> Authenticate(UserLoginDTO userLogin);
         Task<AccountDTO> CreateNewAccount(AccountDTO accountDTO);
+        Task<List<AccountDTO>> GetAllAccountsById(string id);
 
     }
 }

@@ -59,10 +59,15 @@ namespace BankingApp.Services
             }          
         }
 
-
         public async Task<AccountDTO> CreateNewAccount(AccountDTO accountDTO)
         {
             var result = await _dataService.CreateNewAccount(accountDTO);
+            return result;
+        }
+
+        public async Task<List<AccountDTO>> GetAllAccountsById(string id)
+        {
+            var result = (await _dataService.GetAllAccountsByCustomerId(id)).ToList();
             return result;
         }
     }

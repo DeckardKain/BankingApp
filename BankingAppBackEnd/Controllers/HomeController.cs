@@ -84,7 +84,6 @@ namespace BankingAppBackEnd.Controllers
                     customerDTOs.Add(customerDTO);
                 }
 
-
                 return Ok(customerDTOs);
             }
             catch (Exception ex)
@@ -110,10 +109,11 @@ namespace BankingAppBackEnd.Controllers
         }
 
         [HttpGet("api/getallaccountsbyid")]
-        public async Task<ActionResult<List<AccountDTO>>> GetAllAccountsById([FromBody]string id)
+        public async Task<IActionResult> GetAllAccountsById(string userId)
         {
             var accountsDTO = new List<AccountDTO>();
-            var accounts = await _accountService.GetAllAccountsById(id);
+            var customer = await _userService.GetUserById(userId);
+            var accounts = await _accountService.GetAllAccountsById(customer.CustomerId);
 
             foreach (var account in accounts)
             {
@@ -124,10 +124,8 @@ namespace BankingAppBackEnd.Controllers
                     CustomerId = account.CustomerId,
                     Id = account.Id
                 };
-
                 accountsDTO.Add(acc);
             }
-
             return Ok(accountsDTO);
         }
     }

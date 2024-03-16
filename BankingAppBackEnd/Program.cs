@@ -11,9 +11,6 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 
-//builder.Services.AddControllersWithViews()
-//    .AddApplicationPart(typeof(HomeController<>).Assembly);
-
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -54,6 +51,15 @@ builder.Services.AddScoped<AccountFactory>();
 
 
 var app = builder.Build();
+
+// Seed data
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    var dbContext = services.GetRequiredService<BankingAppDbContext>();
+    dbContext.Database.EnsureCreated();
+    await dbContext.SeedInitialData(services);
+}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
