@@ -1,5 +1,7 @@
-﻿
+﻿@inject IDataService dataService
 @inject IUserInteraction userInteraction
+@inject IUIService UIService
+
 
 <EditForm Model="@newAccount" OnValidSubmit="CreateAccount">
     @if (IsAccountCreated)
@@ -8,12 +10,6 @@
             Account created successfully!
         </div>
     }
-
-    <div class="form-group">
-        <label for="customerId">Customer ID:</label>
-        <InputText class="form-control" id="customerId" @bind-Value="@newAccount.CustomerId"></InputText>
-    </div>
-
     <div class="form-group">
         <label for="accountType">Account Type:</label>
         <select class="form-control" id="accountType" @bind="@newAccount.AccountType">
@@ -28,12 +24,37 @@
 
 @code {
     private AccountDTO newAccount = new AccountDTO();
-    private bool IsAccountCreated = false;
+
+    public bool IsAccountCreated { get; set; }
+    [Parameter]
+    public EventCallback OnAccountCreated { get; set; }
+
+    protected override void OnInitialized()
+    {
+        // Subscribe to events
+        UIService.OnUpdateUI += StateHasChanged;
+    }
 
     private async Task CreateAccount()
     {
-        await userInteraction.CreateNewAccount(newAccount);
-        // Set IsAccountCreated to true to show success message
-        IsAccountCreated = true;
+        IsAccountCreated = false;
+        var customerId = await GetCustomerId();
+        newAccount.CustomerId = customerId;
+        var result = await userInteraction.CreateNewAccount(newAccount);
+        if(result != null)
+        {
+            IsAccountCreated = true;
+        }
+        await OnAccountCreated.InvokeAsync();
+        UIService.UpdateUI();
+
+
+    }
+
+    private async Task<string> GetCustomerId()
+    {
+        var userId = userInteraction.UserId;
+        var customerId = await dataService.GetCustomerId(userId);
+        return customerId;
     }
 }

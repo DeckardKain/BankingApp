@@ -1,0 +1,60 @@
+﻿@inject IDataService dataService
+
+<h3>Create Transaction</h3>
+
+<EditForm Model="@transaction" OnValidSubmit="CreateTransaction">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="form-group">
+        <label for="customerId">Customer ID:</label>
+        <InputText id="customerId" class="form-control" @bind-Value="transaction.CustomerId" />
+        <ValidationMessage For="@(() => transaction.CustomerId)" />
+    </div>
+
+    <div class="form-group">
+        <label for="accountId">Account ID:</label>
+        <InputText id="accountId" class="form-control" @bind-Value="transaction.AccountId" />
+        <ValidationMessage For="@(() => transaction.AccountId)" />
+    </div>
+
+    <div class="form-group">
+        <label for="transactionType">Transaction Type:</label>
+        <InputSelect id="transactionType" class="form-control" @bind-Value="transaction.TransactionType">
+            <option value="Deposit">Deposit</option>
+            <option value="Withdrawal">Withdrawal</option>
+            <option value="Transfer">Transfer</option>
+        </InputSelect>
+        <ValidationMessage For="@(() => transaction.TransactionType)" />
+    </div>
+
+    <div class="form-group">
+        <label for="merchantInfo">Merchant Info:</label>
+        <InputText id="merchantInfo" class="form-control" @bind-Value="transaction.MerchantInfo" />
+    </div>
+
+    <div class="form-group">
+        <label for="dateTime">Date and Time:</label>
+        <InputDate id="dateTime" class="form-control" @bind-Value="transaction.DateTime" />
+        <ValidationMessage For="@(() => transaction.DateTime)" />
+    </div>
+
+    <div class="form-group">
+        <label for="amount">Amount:</label>
+        <InputNumber id="amount" class="form-control" @bind-Value="transaction.Amount" />
+        <ValidationMessage For="@(() => transaction.Amount)" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Create Transaction</button>
+</EditForm>
+
+@code {
+    private TransactionDTO transaction = new TransactionDTO();
+
+    private void CreateTransaction()
+    {
+
+        var result = dataService.CreateNewTransaction(transaction);
+
+    }
+}

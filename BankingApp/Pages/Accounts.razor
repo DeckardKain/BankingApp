@@ -1,8 +1,9 @@
 ﻿@page "/accounts"
-
+@inject IUIService UIService
 @inject IDataService dataService
 @inject IUserInteraction userService
 
+<NewAccountForm OnAccountCreated="UpdateAccounts" />
 
 @if(AccountDTOs != null && AccountDTOs.Count > 0)
 {
@@ -21,9 +22,7 @@
         @foreach (var account in AccountDTOs)
         {
             <tr>
-                <td>@account.Id</td>
-                <td>@account.CustomerId</td>
-                <td>@account.AccountType</td>
+                    <td><a href="/accounts/account">@account.AccountType</a></td>
                 <td>@account.Balance</td>
             </tr>
         }
@@ -35,22 +34,23 @@
 @code {
     public List<AccountDTO> AccountDTOs { get; set; } = new List<AccountDTO>();
 
+    protected override void OnInitialized()
+    {
+        UIService.OnUpdateUI += StateHasChanged;
+    }
 
     protected override async Task OnInitializedAsync()
     {
-        // var userId = userService.UserId;
-
-        // AccountDTOs = await dataService.GetAllAccountsByUserId("hjghfhjfjhgfhjgfg");
-
-        var userId = userService.UserId;
-
-        HttpClient httpClient = new HttpClient();
-        httpClient.BaseAddress = new Uri("https://localhost:7176/api/");
-        var response = await httpClient.GetAsync($"getallaccountsbyid/{userId}");
-        
-        
+        UIService.OnUpdateUI += StateHasChanged;
+        await UpdateAccounts();
     }
 
-
-
+    private async Task UpdateAccounts()
+    {
+        var userId = userService.UserId;
+        if (userId != null)
+        {
+            AccountDTOs = await dataService.GetAllAccountsByUserId(userId);
+        }
+    }
 }

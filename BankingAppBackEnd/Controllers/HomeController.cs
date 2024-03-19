@@ -3,6 +3,8 @@ using BankingAppBackEnd.Services.Interfaces;
 using BankingAppCore.DTO.UI;
 using BankingAppCore.DTO.Customer;
 using BankingAppCore.DTO.Account;
+using Azure.Core;
+using BankingAppCore.DTO.Transaction;
 
 namespace BankingAppBackEnd.Controllers
 {
@@ -13,16 +15,18 @@ namespace BankingAppBackEnd.Controllers
         private readonly ICustomerDataService _customerDataService;
         private readonly IUserService _userService;
         private readonly IAccountService _accountService;
+        private readonly ITransactionService _transactionService;
 
         public HomeController(IHttpClientFactory httpClientFactory, ICustomerService customerService,
             ICustomerDataService customerDataService, IUserService userService,
-            IAccountService accountService)
+            IAccountService accountService, ITransactionService transactionService)
         {
             _httpClient = httpClientFactory.CreateClient("BankingAppFrontEnd");
             _customerService = customerService;
             _customerDataService = customerDataService;
             _userService = userService;
             _accountService = accountService;
+            _transactionService = transactionService;
         }
 
         [HttpPost("api/userregisterdto")]
@@ -127,6 +131,50 @@ namespace BankingAppBackEnd.Controllers
                 accountsDTO.Add(acc);
             }
             return Ok(accountsDTO);
+        }
+
+        [HttpGet("api/getcustomerbyid/{userId}")]
+        public async Task<IActionResult> GetCustomerIdFromUserId(string userId)
+        {            
+            var customer = await _userService.GetUserById(userId);
+            return Ok(customer.CustomerId);            
+        }
+
+        [HttpGet("api/getaccounttransactions")]
+        public async Task<IActionResult> GetAccountTransactions([FromBody] string accountId)
+        {
+            var transactionDTOs = new List<TransactionDTO>();
+
+            try
+            {
+                if (accountId == null || string.IsNullOrWhiteSpace(accountId))
+                {
+                    return BadRequest("Account number is required.");
+                }
+
+                var transactions = await _transactionService.GetAllTransactionsById(accountId);
+
+                foreach(var transaction in transactions)
+                {
+                    var trans = new TransactionDTO()
+                    {
+                        AccountId = transaction.AccountId,
+                        DateTime = transaction.DateTime,
+                        Amount = transaction.Amount,
+                        Id = transaction.Id,
+                        MerchantInfo = transaction.MerchantInfo,
+                        TransactionType = transaction.TransactionType
+                    };
+                    transactionDTOs.Add(trans);
+                }
+
+                return Ok(transactionDTOs);
+            }
+            catch (Exception ex)
+            {
+                // Log the exception
+                return StatusCode(500, "An error occurred while processing the request.");
+            }
         }
     }
 }

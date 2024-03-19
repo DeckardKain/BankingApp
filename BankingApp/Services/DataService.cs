@@ -4,6 +4,9 @@ using System.Net.Http.Json;
 using Newtonsoft.Json;
 using BankingApp.DTO.Customer;
 using BankingApp.DTO.Account;
+using BankingApp.DTO.Transaction;
+using System.Text;
+
 
 namespace BankingApp.Services
 {
@@ -150,11 +153,11 @@ namespace BankingApp.Services
         }
 
 
-        public async Task<List<AccountDTO>> GetAllAccountsByUserId(string id)
+        public async Task<List<AccountDTO>> GetAllAccountsByUserId(string userId)
         {
             try
             {
-                var response = await _httpClient.GetAsync($"getallaccountsbyid/{id}");
+                var response = await _httpClient.GetAsync($"getallaccountsbyid/{userId}");
                 // Check if the response is successful
                 if (response.IsSuccessStatusCode)
                 {
@@ -177,6 +180,98 @@ namespace BankingApp.Services
             }
         }
 
+        public async Task<string> GetCustomerId(string id)
+        {
+            try
+            {
+                var response = await _httpClient.GetAsync($"getcustomerbyid/{id}");
+                // Check if the response is successful
+                if (response.IsSuccessStatusCode)
+                {
+                    var content = await response.Content.ReadAsStringAsync();
+                    return content;
+                }
+                else
+                {
+                    // Handle unsuccessful response (e.g., log error, throw exception)
+                    Console.WriteLine($"Failed to login. Status Code: {response.StatusCode}");
+                    return string.Empty;
+                }
+            }
+            catch (Exception ex)
+            {
+                // Handle exception (e.g., log error, throw custom exception)
+                Console.WriteLine($"An error occurred while attempting to authenticate: {ex.Message}");
+                return string.Empty;
+            }
+        }
+
+        public async Task<List<TransactionDTO>> GetAllTransactionsByAccountId(string accountId)
+        {
+            try
+            {
+                // Serialize the account number into JSON format
+                var jsonData = JsonConvert.SerializeObject(accountId);
+
+                // Create StringContent with JSON data
+                var jsonContent = new StringContent(jsonData, Encoding.UTF8, "application/json");
+
+                // Create HttpRequestMessage with GET method and content
+                var request = new HttpRequestMessage(HttpMethod.Get, "GetAccountTransactions");
+                request.Content = jsonContent;
+
+                // Send the request
+                var response = await _httpClient.SendAsync(request);
+
+                // Check if the response is successful
+                if (response.IsSuccessStatusCode)
+                {
+                    // Deserialize the response content into a list of transactions
+                    var content = await response.Content.ReadAsStringAsync();
+                    var transactions = JsonSerializer.Deserialize<List<TransactionDTO>>(content);
+                    return transactions;
+                }
+                else
+                {
+                    // Handle unsuccessful response
+                    // You can throw an exception or return null, depending on your requirements
+                    throw new Exception($"Failed to get transactions. Status code: {response.StatusCode}");
+                }
+            }
+            catch (Exception ex)
+            {
+                // Handle exceptions
+                // You can throw the exception or log it, depending on your requirements
+                throw ex;
+            }
+        }
+
+        public async Task<TransactionDTO> CreateNewTransaction(TransactionDTO transactionDTO)
+        {
+            try
+            {
+                var response = await _httpClient.PostAsJsonAsync("newtransaction", transactionDTO);
+                // Check if the response is successful
+                if (response.IsSuccessStatusCode)
+                {
+                    // Deserialize the response content to get the login result
+                    var accountResult = await response.Content.ReadFromJsonAsync<TransactionDTO>();
+                    return accountResult;
+                }
+                else
+                {
+                    // Handle unsuccessful response (e.g., log error, throw exception)
+                    Console.WriteLine($"Failed to login. Status Code: {response.StatusCode}");
+                    return new TransactionDTO();
+                }
+            }
+            catch (Exception ex)
+            {
+                // Handle exception (e.g., log error, throw custom exception)
+                Console.WriteLine($"An error occurred while attempting to authenticate: {ex.Message}");
+                return new TransactionDTO();
+            }
+        }
     }
 }
 

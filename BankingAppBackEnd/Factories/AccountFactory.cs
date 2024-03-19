@@ -26,7 +26,8 @@ namespace BankingAppBackEnd.Factories
                     {
                         Id = UUIDGenerator.GenerateUUID(),
                         CustomerId = accountDTO.CustomerId,
-                        Balance = 0,                        
+                        Balance = 0,
+                        AccountType = AccountType.Chequing                        
                     };
 
                     var newChequingAccount = await _accountDataService.Create(chequingAccount);
@@ -40,7 +41,8 @@ namespace BankingAppBackEnd.Factories
                     {
                         Id = UUIDGenerator.GenerateUUID(),
                         CustomerId = accountDTO.CustomerId,
-                        Balance = 0
+                        Balance = 0,
+                        AccountType = AccountType.Savings
                     };
 
                     var newSavingsAccount = await _accountDataService.Create(savingsAccount);
@@ -50,11 +52,12 @@ namespace BankingAppBackEnd.Factories
                     return accountDTO;
 
                 case AccountType.Retirement:
-                    var retirementAccount = new Savings
+                    var retirementAccount = new Retirement
                     {
                         Id = UUIDGenerator.GenerateUUID(),
                         CustomerId = accountDTO.CustomerId,
-                        Balance = 0
+                        Balance = 0,
+                        AccountType = AccountType.Retirement
                     };
 
                     var newRetirementAccount = await _accountDataService.Create(retirementAccount);
@@ -69,7 +72,6 @@ namespace BankingAppBackEnd.Factories
             }
         }
 
-
         public async Task CreateAccounts()
         {
             var customers = await _customerDataService.GetAll();
@@ -79,7 +81,6 @@ namespace BankingAppBackEnd.Factories
                 var account = ObjectGenerator.GenerateRandomAccount(customer.Id);
                 await Create(account);
             }
-
         }
     }
 }
