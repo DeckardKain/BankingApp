@@ -17,10 +17,10 @@ namespace BankingApp.Services
         private readonly IObserver _observer;
         private readonly IDataService _dataService;
 
-        public string Username { get; set; } = default!;
-        public bool isAuthenticated { get; set; } = false;
-        public string UserId { get; set; } = default!;
-        public Role Role { get; set; }
+        public string? Username { get; set; }
+        public bool isAuthenticated { get; set; }
+        public string? UserId { get; set; }
+        public Role? Role { get; set; }
         public UserInteraction(IObserver observer, IDataService dataService)
         {
             _observer = observer;
@@ -67,7 +67,7 @@ namespace BankingApp.Services
 
         public async Task<List<AccountDTO>> GetAllAccountsById(string id)
         {
-            var result = (await _dataService.GetAllAccountsByCustomerId(id)).ToList();
+            var result = await _dataService.GetAllAccountsByUserId(id);
             return result;
         }
     }

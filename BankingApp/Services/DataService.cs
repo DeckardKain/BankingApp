@@ -150,11 +150,11 @@ namespace BankingApp.Services
         }
 
 
-        public async Task<List<AccountDTO>> GetAllAccountsByCustomerId(string id)
+        public async Task<List<AccountDTO>> GetAllAccountsByUserId(string id)
         {
             try
             {
-                var response = await _httpClient.GetAsync($"getallaccountsbyid?id={id}");
+                var response = await _httpClient.GetAsync($"getallaccountsbyid/{id}");
                 // Check if the response is successful
                 if (response.IsSuccessStatusCode)
                 {

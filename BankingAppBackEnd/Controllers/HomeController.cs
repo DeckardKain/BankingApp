@@ -108,7 +108,7 @@ namespace BankingAppBackEnd.Controllers
             return Ok(newAccountResult);
         }
 
-        [HttpGet("api/getallaccountsbyid")]
+        [HttpGet("api/getallaccountsbyid/{userId}")]
         public async Task<IActionResult> GetAllAccountsById(string userId)
         {
             var accountsDTO = new List<AccountDTO>();
