@@ -4,34 +4,41 @@
 @inject IDataService dataService
 @inject IUserInteraction userService
 
-<NewAccountForm OnAccountCreated="UpdateAccounts" />
 
-@if(AccountDTOs != null && AccountDTOs.Count > 0)
+@if (userService.isAuthenticated)
 {
-    
 
-<table class="table table-striped">
-    <thead>
-        <tr>
-            <th>Account Type</th>
-            <th>Balance</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var account in AccountDTOs)
-        {
-            <tr>
-                    <td><button class="link-button" @onclick="(()=> SelectAccount(account.Id))">@account.AccountType </button></td>
-                <td>@account.Balance</td>
-            </tr>
-        }
-    </tbody>
-</table>
+    <NewAccountForm OnAccountCreated="UpdateAccounts" />
+
+    @if (AccountDTOs != null && AccountDTOs.Count > 0)
+    {
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Account Type</th>
+                    <th>Balance</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var account in AccountDTOs)
+                {
+                    <tr>
+                        <td><button class="link-button" @onclick="(()=> SelectAccount(account.Id))">@account.AccountType </button></td>
+                        <td>@account.Balance</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+
+    @if (!string.IsNullOrEmpty(AccountNumber) && NewAccountSelected)
+    {
+        <Account AccountNumber=@AccountNumber CustomerId=@CustomerId OnAccountSelected="NewAccountSelected" />
+    }
 }
-
-@if (!string.IsNullOrEmpty(AccountNumber) && NewAccountSelected)
+else
 {
-    <Account AccountNumber=@AccountNumber CustomerId=@CustomerId OnAccountSelected="NewAccountSelected" />
+    <p>Please login.</p>
 }
 
 
