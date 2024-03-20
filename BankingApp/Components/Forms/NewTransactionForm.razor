@@ -1,29 +1,18 @@
 ﻿@inject IDataService dataService
+@inject IUIService UIService
 
 <h3>Create Transaction</h3>
 
 <EditForm Model="@transaction" OnValidSubmit="CreateTransaction">
     <DataAnnotationsValidator />
     <ValidationSummary />
-
-    <div class="form-group">
-        <label for="customerId">Customer ID:</label>
-        <InputText id="customerId" class="form-control" @bind-Value="transaction.CustomerId" />
-        <ValidationMessage For="@(() => transaction.CustomerId)" />
-    </div>
-
-    <div class="form-group">
-        <label for="accountId">Account ID:</label>
-        <InputText id="accountId" class="form-control" @bind-Value="transaction.AccountId" />
-        <ValidationMessage For="@(() => transaction.AccountId)" />
-    </div>
-
     <div class="form-group">
         <label for="transactionType">Transaction Type:</label>
         <InputSelect id="transactionType" class="form-control" @bind-Value="transaction.TransactionType">
-            <option value="Deposit">Deposit</option>
-            <option value="Withdrawal">Withdrawal</option>
-            <option value="Transfer">Transfer</option>
+            @foreach (TransactionType type in Enum.GetValues(typeof(TransactionType)))
+            {
+                <option value="@type">@type</option>
+            }
         </InputSelect>
         <ValidationMessage For="@(() => transaction.TransactionType)" />
     </div>
@@ -51,10 +40,24 @@
 @code {
     private TransactionDTO transaction = new TransactionDTO();
 
-    private void CreateTransaction()
+    [Parameter]
+    public string? CustomerId { get; set; }
+    [Parameter]
+    public string? AccountId { get; set; }
+
+    private bool IsSuccess { get; set; } = false;
+
+    protected override void OnInitialized()
     {
+        transaction.CustomerId = CustomerId;
+        transaction.AccountId = AccountId;
+        transaction.DateTime = DateTime.Now;
+        UIService.OnUpdateUI += StateHasChanged;
+    }
 
-        var result = dataService.CreateNewTransaction(transaction);
-
+    private async Task CreateTransaction()
+    {
+        var result = await dataService.CreateNewTransaction(transaction);
+        UIService.UpdateUI();
     }
 }

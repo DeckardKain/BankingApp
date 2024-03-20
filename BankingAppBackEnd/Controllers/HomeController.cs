@@ -140,8 +140,8 @@ namespace BankingAppBackEnd.Controllers
             return Ok(customer.CustomerId);            
         }
 
-        [HttpGet("api/getaccounttransactions")]
-        public async Task<IActionResult> GetAccountTransactions([FromBody] string accountId)
+        [HttpGet("api/getaccounttransactions/{accountId}")]
+        public async Task<IActionResult> GetAccountTransactions(string accountId)
         {
             var transactionDTOs = new List<TransactionDTO>();
 
@@ -175,6 +175,13 @@ namespace BankingAppBackEnd.Controllers
                 // Log the exception
                 return StatusCode(500, "An error occurred while processing the request.");
             }
+        }
+
+        [HttpPost("api/newtransaction")]
+        public async Task<ActionResult<TransactionDTO>> CreateNewAccount([FromBody] TransactionDTO transactionDTO)
+        {
+            var newAccountResult = await _transactionService.CreateNewTransaction(transactionDTO);
+            return Ok(newAccountResult);
         }
     }
 }

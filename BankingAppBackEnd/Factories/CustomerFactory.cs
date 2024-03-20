@@ -94,6 +94,18 @@ namespace BankingAppBackEnd.Factories
             };
 
             await CreateNewCustomerRegistration(customer);
+            var customer2 = new UserRegisterDTO()
+            {
+                Address = "The Beach, Miami",
+                Email = "admin@yourbank.com",
+                Name = "Admin Account",
+                Password = "admin",
+                PhoneNumber = "1234567890",
+                Username = "admin"                
+            };
+
+            await CreateNewCustomerRegistration(customer2);
+
         }
 
     }

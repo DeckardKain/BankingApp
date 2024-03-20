@@ -1,15 +1,10 @@
-﻿@inject IDataService dataService
+﻿@using System.Reflection.Metadata
+@inject IDataService dataService
 @inject IUserInteraction userInteraction
 @inject IUIService UIService
 
 
 <EditForm Model="@newAccount" OnValidSubmit="CreateAccount">
-    @if (IsAccountCreated)
-    {
-        <div class="alert alert-success" role="alert">
-            Account created successfully!
-        </div>
-    }
     <div class="form-group">
         <label for="accountType">Account Type:</label>
         <select class="form-control" id="accountType" @bind="@newAccount.AccountType">
@@ -29,6 +24,9 @@
     [Parameter]
     public EventCallback OnAccountCreated { get; set; }
 
+    private string fadeClass = ""; // Css class to control fade animation for alert
+
+
     protected override void OnInitialized()
     {
         // Subscribe to events
@@ -44,6 +42,9 @@
         if(result != null)
         {
             IsAccountCreated = true;
+            fadeClass = "fade-out";
+            await Task.Delay(1000);
+            fadeClass = "fade-out hidden";
         }
         await OnAccountCreated.InvokeAsync();
         UIService.UpdateUI();

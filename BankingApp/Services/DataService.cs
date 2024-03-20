@@ -6,6 +6,7 @@ using BankingApp.DTO.Customer;
 using BankingApp.DTO.Account;
 using BankingApp.DTO.Transaction;
 using System.Text;
+using BankingAppCore.Models.Customers;
 
 
 namespace BankingApp.Services
@@ -210,25 +211,16 @@ namespace BankingApp.Services
         {
             try
             {
-                // Serialize the account number into JSON format
-                var jsonData = JsonConvert.SerializeObject(accountId);
-
-                // Create StringContent with JSON data
-                var jsonContent = new StringContent(jsonData, Encoding.UTF8, "application/json");
-
-                // Create HttpRequestMessage with GET method and content
-                var request = new HttpRequestMessage(HttpMethod.Get, "GetAccountTransactions");
-                request.Content = jsonContent;
-
                 // Send the request
-                var response = await _httpClient.SendAsync(request);
+                var response = await _httpClient.GetAsync($"getaccounttransactions/{accountId}");
 
                 // Check if the response is successful
                 if (response.IsSuccessStatusCode)
                 {
                     // Deserialize the response content into a list of transactions
-                    var content = await response.Content.ReadAsStringAsync();
-                    var transactions = JsonSerializer.Deserialize<List<TransactionDTO>>(content);
+                    string jsonReponse = await response.Content.ReadAsStringAsync();
+                    var transactions = JsonConvert.DeserializeObject<List<TransactionDTO>>(jsonReponse);
+
                     return transactions;
                 }
                 else

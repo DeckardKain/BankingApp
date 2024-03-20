@@ -50,7 +50,8 @@
     {
         // Subscribe to events        
         UIService.OnUpdateUI += StateHasChanged;
-
+        userLogin.Username = "admin";
+        userLogin.Password = "admin";
     }
 
     private async void HandleValidSubmit()

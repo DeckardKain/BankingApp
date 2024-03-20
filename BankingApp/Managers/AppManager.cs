@@ -2,6 +2,9 @@
 
 namespace BankingApp.Managers
 {
+
+    // The idea behind this is to have a single source of truth across the entire app ecosystem to track stats, user logins/sessions
+    // and other pertinent data.
     public class AppManager
     {
         // PATTERN DEMONSTRATION

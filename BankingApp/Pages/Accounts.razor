@@ -1,4 +1,5 @@
 ﻿@page "/accounts"
+
 @inject IUIService UIService
 @inject IDataService dataService
 @inject IUserInteraction userService
@@ -12,8 +13,6 @@
 <table class="table table-striped">
     <thead>
         <tr>
-            <th>Id</th>
-            <th>Customer Id</th>
             <th>Account Type</th>
             <th>Balance</th>
         </tr>
@@ -22,7 +21,7 @@
         @foreach (var account in AccountDTOs)
         {
             <tr>
-                    <td><a href="/accounts/account">@account.AccountType</a></td>
+                    <td><button class="link-button" @onclick="(()=> SelectAccount(account.Id))">@account.AccountType </button></td>
                 <td>@account.Balance</td>
             </tr>
         }
@@ -30,9 +29,21 @@
 </table>
 }
 
+@if (!string.IsNullOrEmpty(AccountNumber) && NewAccountSelected)
+{
+    <Account AccountNumber=@AccountNumber CustomerId=@CustomerId OnAccountSelected="NewAccountSelected" />
+}
+
 
 @code {
     public List<AccountDTO> AccountDTOs { get; set; } = new List<AccountDTO>();
+
+    public string AccountNumber { get; set; }
+    public string CustomerId { get; set; }
+
+    private string UserId { get; set; }
+
+    public bool NewAccountSelected { get; set; } = false;
 
     protected override void OnInitialized()
     {
@@ -42,15 +53,25 @@
     protected override async Task OnInitializedAsync()
     {
         UIService.OnUpdateUI += StateHasChanged;
+        UserId = userService.UserId;
         await UpdateAccounts();
+        CustomerId = await dataService.GetCustomerId(UserId);
     }
 
     private async Task UpdateAccounts()
-    {
-        var userId = userService.UserId;
-        if (userId != null)
+    {        
+        if (UserId != null)
         {
-            AccountDTOs = await dataService.GetAllAccountsByUserId(userId);
+            AccountDTOs = await dataService.GetAllAccountsByUserId(UserId);
         }
     }
+
+    private async Task SelectAccount(string accountId)
+    {
+        AccountNumber = accountId;
+        await UpdateAccounts();
+        NewAccountSelected = true;
+        StateHasChanged();
+    }
+
 }

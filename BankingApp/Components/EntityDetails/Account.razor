@@ -1,4 +1,6 @@
 ﻿@inject IDataService dataService
+@inject IUserInteraction userService
+@inject IUIService UIService
 
 
 @if (Transactions != null && Transactions.Any())
@@ -18,32 +20,61 @@
                 <tr>
                     <td>@transaction.DateTime.ToShortDateString()</td>
                     <td>@transaction.MerchantInfo</td>
-                    <td>@transaction.Amount.Value.ToString("C",CultureInfo.InvariantCulture)</td>
+                    <td>@transaction.Amount.Value.ToString("C")</td>
                 </tr>
             }
         </tbody>
     </table>
+    <NewTransactionForm AccountId=@AccountNumber CustomerId=@CustomerId />
 }
 else
 {
     <p>No transactions available for this account.</p>
+    <NewTransactionForm AccountId=@AccountNumber CustomerId=@CustomerId />
 }
+
+
 
 @code {
     [Parameter]
     public string AccountNumber { get; set; }
+    [Parameter]
+    public string CustomerId { get; set; }
+
+    [Parameter]
+    public bool OnAccountSelected { get; set; }
 
     public List<TransactionDTO> Transactions { get; set; } = new List<TransactionDTO>();
 
     protected override async Task OnInitializedAsync()
     {
+        UIService.OnUpdateUI += StateHasChanged;        
         await GetAccountTransactions();
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if (OnAccountSelected)
+        {
+            await GetAccountTransactions();           
+        }
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (OnAccountSelected)
+        {
+            await GetAccountTransactions();
+        }
     }
 
     private async Task GetAccountTransactions()
     {
+        Transactions.Clear();
         Transactions = await dataService.GetAllTransactionsByAccountId(AccountNumber);
+        UIService.UpdateUI();
     }
 
+ 
 
 }

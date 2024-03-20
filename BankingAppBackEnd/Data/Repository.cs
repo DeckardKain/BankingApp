@@ -1,4 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using BankingAppCore.Models.Accounts;
+using BankingAppCore.Models.Customers;
+using BankingAppCore.Models.Transactions;
+using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 
 
@@ -109,13 +112,27 @@ namespace BankingAppBackEnd.Data
             }
         }
 
-        public async Task<IEnumerable<T>> GetAllByCustomerId(string customerId)
+        public async Task<IEnumerable<T>> GetAllById(string Id)
         {
             try
             {
-                var entities = await _dbSet.Where(x => EF.Property<string>(x, "CustomerId") == customerId).ToListAsync();
-                return entities;
+                if(typeof(T) == typeof(Customer))
+                {
+                    var entities = await _dbSet.Where(x => EF.Property<string>(x, "CustomerId") == Id).ToListAsync();
+                    return entities;
+                }
+                if(typeof(T) == typeof(Transaction))
+                {
+                    var entities = await _dbSet.Where(x => EF.Property<string>(x, "AccountId") == Id).ToListAsync();
+                    return entities;
+                }
+                if (typeof(T) == typeof(Account))
+                {
+                    var entities = await _dbSet.Where(x => EF.Property<string>(x, "CustomerId") == Id).ToListAsync();
+                    return entities;
+                }
 
+                return null;
             }
             catch (Exception ex)
             {

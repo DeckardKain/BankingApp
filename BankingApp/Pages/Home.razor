@@ -11,12 +11,12 @@
 @if (!userInteraction.isAuthenticated)
 {
     <h1>Welcome to Your Bank!</h1>
+    <LoginSignUpComponent />
 }
 else
 {
     <h1>Welcome @userInteraction.Username to your Bank!</h1>
 }
-
 
 <p>This app has been designed and created by Philip Mullins as a demonstration of all 5 SOLID principles.</p>
 <p>This is not intended to be a mock of a real world bank app because the features here are basic and its about
@@ -38,14 +38,7 @@ else
     The point here is that we need to be, as software developers, aware of all approaches and patterns available to be able to build scaleable programs.
 </p>
 
-@if (!userInteraction.isAuthenticated)
-{
-    <LoginSignUpComponent />
-}
-else
-{
 
-}
 
 
 @code {

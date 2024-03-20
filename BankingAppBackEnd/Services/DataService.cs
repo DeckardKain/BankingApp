@@ -49,7 +49,7 @@ namespace BankingAppBackEnd.Services
 
         public async Task<IEnumerable<T>> FindAllById(string id)
         {
-            return await _repository.GetAllByCustomerId(id);
+            return await _repository.GetAllById(id);
         }
 
     }
